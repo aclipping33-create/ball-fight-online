@@ -1,0 +1,16 @@
+name = "ball-fight-online"
+main = "worker.js"
+compatibility_date = "2025-10-11"
+
+[assets]
+directory = "./public"
+binding = "ASSETS"
+run_worker_first = true
+
+[[durable_objects.bindings]]
+name = "ROOMS"
+class_name = "RoomRelay"
+
+[[migrations]]
+tag = "v1"
+new_sqlite_classes = ["RoomRelay"]

@@ -1,8 +1,12 @@
 {
-  "name": "ball-fight-online",
+  "name": "ball-fight-cloudflare",
   "version": "1.0.0",
   "private": true,
-  "engines": {"node": ">=20"},
-  "scripts": {"start": "node server.js"},
-  "dependencies": {"ws": "8.22.0"}
+  "scripts": {
+    "build": "mkdir -p public && cp game.html public/game.html",
+    "deploy": "wrangler deploy"
+  },
+  "devDependencies": {
+    "wrangler": "4.155.0"
+  }
 }
