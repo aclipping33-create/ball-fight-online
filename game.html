@@ -10508,8 +10508,10 @@ var qrcode = function() {
             p1=createCharacter(lanHeroes[0],75,75,false); p2=createCharacter(lanHeroes[1],825,825,true);
             for(const e of [p1,p2]) {e.radius*=MAZE_RADIUS_SCALE;e.manualSkillOnly=true;e.isBot=false;e.vx=0;e.vy=0;if(lanRole==='host')armUltManual(e);}
             gamePlayers=[p1,p2];lanFighters=gamePlayers;lanMatchActive=true;
-            // Wemmball's drawing needs its target even on the non-simulating guest.
-            p1.target=p2;p2.target=p1;
+            // Wemmball memakai properti target untuk menggambar Elytra di sisi guest.
+            // Jangan timpa method target() milik ExpansionHero atau properti hero lain.
+            if(p1 instanceof Wemmball)p1.target=p2;
+            if(p2 instanceof Wemmball)p2.target=p1;
         }
         function lanRestoreWorld() {
             lanMatchActive=false;
@@ -10586,7 +10588,7 @@ var qrcode = function() {
                     else if(typeof d[k]==='boolean'||typeof d[k]==='string')e[k]=d[k];
                 }
                 e.lanReady=!!s.ready;
-                e.target=lanFighters[1-i];
+                if(e instanceof Wemmball)e.target=lanFighters[1-i];
             }
             projectiles=(Array.isArray(data.shots)?data.shots:[]).slice(0,100).filter(pr=>pr && Number.isFinite(pr.x)&&Number.isFinite(pr.y)&&Number.isFinite(pr.r)).map(pr=>({x:pr.x,y:pr.y,r:Math.max(1,Math.min(40,pr.r)),dmg:pr.dmg,kind:pr.kind,color:pr.color,accent:pr.accent,boomerang:pr.boomerang,returning:pr.returning,vx:Number.isFinite(pr.vx)?pr.vx:0,vy:Number.isFinite(pr.vy)?pr.vy:0,owner:lanFighters[pr.owner],target:lanFighters[pr.target]}));
             floatingTexts=(Array.isArray(data.effects)?data.effects:[]).slice(0,40).filter(ft=>ft&&Number.isFinite(ft.x)&&Number.isFinite(ft.y)&&Number.isFinite(ft.timer)&&typeof ft.text==='string');
