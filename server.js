@@ -36,7 +36,48 @@ const server = http.createServer((req, res) => {
 const wss = new WebSocketServer({ server, maxPayload: 65536, perMessageDeflate: false });
 // Room hanya disimpan di memori, untuk percobaan pada jaringan tepercaya.
 const rooms = new Map();
-const heroIds = new Set(['Dummies','BladeDancer','Mathemathing','Gravity','Wemmball','Vexen','Bane','Gloo','Fakhmolitionator','Amat','Deadbibi','PakParkir','Bakso','Bantal','Nyamuk','Sandal','Phantom']);
+const heroIds = new Set([
+    'Dummies', 'BladeDancer', 'Mathemathing', 'Gravity',
+    'Wemmball', 'Vexen', 'Bane', 'Gloo',
+    'Fakhmolitionator', 'Amat', 'Deadbibi', 'PakParkir',
+    'Bakso', 'Bantal', 'Nyamuk', 'Sandal',
+    'Phantom', 'VoltArrow', 'MagmaMortar', 'FrostCrossbow',
+    'OrbitalRay', 'ToxicBlower', 'RicochetDisc', 'SonicWave',
+    'NeedleSpinner', 'PhotonCannon', 'GooLauncher', 'HarpoonGunner',
+    'BoomerangMaster', 'ShurikenShadow', 'PlasmaSniper', 'FireworksCluster',
+    'ChronoSlinger', 'AeroMissile', 'AcidMortar', 'LaserPrism',
+    'FeatherDart', 'AshenBrawler', 'TitanShield', 'SawtoothWheel',
+    'VampireKnight', 'SumoMaster', 'LancerDragoon', 'CounterDuelist',
+    'ChainWrecker', 'GladiatorPugilist', 'ImpactHammer', 'SteamStriker',
+    'SpikeHedgehog', 'KarateBlackbelt', 'MonkStaff', 'BouncerTrampoline',
+    'RiderCharger', 'DreadBerserker', 'CactusPuncher', 'IronJaw',
+    'MagmaGolem', 'PhantomDagger', 'ShadowNinja', 'VenomSerpent',
+    'FlashBlade', 'GrimReaper', 'CyberAssassin', 'GripFang',
+    'VoidStalker', 'BloodRaven', 'LaserStriker', 'PoisonDartist',
+    'SpecterGhost', 'KestrelFalcon', 'ChronoBackstabber', 'NeedleExecutioner',
+    'RoseDuelist', 'ShurikenMaster', 'NightshadeVenom', 'WarpBlade',
+    'GaleAssassin', 'IronBastion', 'MagmaRhino', 'GravitonCore',
+    'BumperPinball', 'IceWallWarden', 'ReflectorShield', 'SlimeDivider',
+    'SandwormBurrower', 'AegisGuardian', 'ShockwaveTitan', 'ElectroCage',
+    'TarballPit', 'VortexAnchor', 'BoulderRoll', 'SpikeFortress',
+    'MoltenTank', 'BubbleGuardian', 'MagneticDefender', 'JuggernautHull',
+    'ChainWarden', 'ChronosMage', 'PyromancerCore', 'FrostbiteSorcerer',
+    'TelekinesisOrb', 'IllusionistMirror', 'NecroSummoner', 'AlchemistChem',
+    'PortalArchitect', 'ZeusThundergod', 'SingularityVoid', 'ManaSiphon',
+    'HexCurser', 'SolarFlareMage', 'GravityInverter', 'SpatialDistorter',
+    'ChainSpark', 'PlagueCarrier', 'TimeRewinder', 'TornadoSummoner',
+    'CosmicSupernova', 'SiameseSlasher',
+]);
+
+function cleanHeroName(value) {
+    if (typeof value !== 'string') return '';
+    const cleaned=value.normalize('NFKC').replace(/[\u0000-\u001f\u007f<>&"'`\\]/g,'').replace(/\s+/g,' ').trim();
+    return Array.from(cleaned).slice(0,24).join('');
+}
+function cleanBattleNames(value) {
+    return Array.isArray(value) && value.length===2 ? value.map(cleanHeroName) : null;
+}
+
 const alphabet = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
 function send(socket, message) {
     if (socket && socket.readyState === WebSocket.OPEN && socket.bufferedAmount < 262144) socket.send(JSON.stringify(message));
@@ -124,7 +165,11 @@ wss.on('connection', (socket, request) => {
             if (!room || !room.playing || room.guest !== socket || !Number.isFinite(msg.x) || !Number.isFinite(msg.y)) return;
             let x = Math.max(-1, Math.min(1, msg.x)), y = Math.max(-1, Math.min(1, msg.y));
             const len = Math.hypot(x, y); if (len > 1) { x /= len; y /= len; }
-            send(room.host, {type: 'input', x, y});
+            const packet={type:'input',x,y};
+            if(Array.isArray(room.heroes)&&msg.heroId===room.heroes[1]&&heroIds.has(msg.heroId)){
+                const heroName=cleanHeroName(msg.heroName);if(heroName){packet.heroId=msg.heroId;packet.heroName=heroName;}
+            }
+            send(room.host,packet);
         } else if (msg.type === 'action') {
             const room = rooms.get(socket.room);
             if (!room || !room.playing || room.guest !== socket || !['skill','skill2','ult'].includes(msg.action)) return;
@@ -138,8 +183,9 @@ wss.on('connection', (socket, request) => {
                 !ps.every(p => p && typeof p === 'object' && typeof p.data === 'object' && p.data !== null) ||
                 !Array.isArray(msg.shots) || msg.shots.length > 100 ||
                 !Array.isArray(msg.effects) || msg.effects.length > 80) return;
-            send(room.guest, {type:'battle_state', players:ps, shots:msg.shots, effects:msg.effects,
-                winner:['P1','P2','DRAW'].includes(msg.winner)?msg.winner:null});
+            const packet={type:'battle_state',players:ps,shots:msg.shots,effects:msg.effects,
+                winner:['P1','P2','DRAW'].includes(msg.winner)?msg.winner:null};
+            const names=cleanBattleNames(msg.names);if(names)packet.names=names;send(room.guest,packet);
         } else if (msg.type === 'state') {
             const room = rooms.get(socket.room), p = msg.positions;
             if (!room || !room.playing || room.host !== socket || !Array.isArray(p) || p.length !== 4 || !p.every(Number.isFinite)) return;

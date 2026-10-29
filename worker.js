@@ -1,8 +1,49 @@
 // Ball Fight: relay sederhana untuk mabar pribadi, menggunakan Cloudflare Durable Objects.
 // Game tetap disimulasikan oleh HP host. Tidak ada akun pemain atau anti-cheat.
-const HEROES = new Set(['Dummies','BladeDancer','Mathemathing','Gravity','Wemmball','Vexen','Bane','Gloo','Fakhmolitionator','Amat','Deadbibi','PakParkir','Bakso','Bantal','Nyamuk','Sandal','Phantom']);
+const HEROES = new Set([
+    'Dummies', 'BladeDancer', 'Mathemathing', 'Gravity',
+    'Wemmball', 'Vexen', 'Bane', 'Gloo',
+    'Fakhmolitionator', 'Amat', 'Deadbibi', 'PakParkir',
+    'Bakso', 'Bantal', 'Nyamuk', 'Sandal',
+    'Phantom', 'VoltArrow', 'MagmaMortar', 'FrostCrossbow',
+    'OrbitalRay', 'ToxicBlower', 'RicochetDisc', 'SonicWave',
+    'NeedleSpinner', 'PhotonCannon', 'GooLauncher', 'HarpoonGunner',
+    'BoomerangMaster', 'ShurikenShadow', 'PlasmaSniper', 'FireworksCluster',
+    'ChronoSlinger', 'AeroMissile', 'AcidMortar', 'LaserPrism',
+    'FeatherDart', 'AshenBrawler', 'TitanShield', 'SawtoothWheel',
+    'VampireKnight', 'SumoMaster', 'LancerDragoon', 'CounterDuelist',
+    'ChainWrecker', 'GladiatorPugilist', 'ImpactHammer', 'SteamStriker',
+    'SpikeHedgehog', 'KarateBlackbelt', 'MonkStaff', 'BouncerTrampoline',
+    'RiderCharger', 'DreadBerserker', 'CactusPuncher', 'IronJaw',
+    'MagmaGolem', 'PhantomDagger', 'ShadowNinja', 'VenomSerpent',
+    'FlashBlade', 'GrimReaper', 'CyberAssassin', 'GripFang',
+    'VoidStalker', 'BloodRaven', 'LaserStriker', 'PoisonDartist',
+    'SpecterGhost', 'KestrelFalcon', 'ChronoBackstabber', 'NeedleExecutioner',
+    'RoseDuelist', 'ShurikenMaster', 'NightshadeVenom', 'WarpBlade',
+    'GaleAssassin', 'IronBastion', 'MagmaRhino', 'GravitonCore',
+    'BumperPinball', 'IceWallWarden', 'ReflectorShield', 'SlimeDivider',
+    'SandwormBurrower', 'AegisGuardian', 'ShockwaveTitan', 'ElectroCage',
+    'TarballPit', 'VortexAnchor', 'BoulderRoll', 'SpikeFortress',
+    'MoltenTank', 'BubbleGuardian', 'MagneticDefender', 'JuggernautHull',
+    'ChainWarden', 'ChronosMage', 'PyromancerCore', 'FrostbiteSorcerer',
+    'TelekinesisOrb', 'IllusionistMirror', 'NecroSummoner', 'AlchemistChem',
+    'PortalArchitect', 'ZeusThundergod', 'SingularityVoid', 'ManaSiphon',
+    'HexCurser', 'SolarFlareMage', 'GravityInverter', 'SpatialDistorter',
+    'ChainSpark', 'PlagueCarrier', 'TimeRewinder', 'TornadoSummoner',
+    'CosmicSupernova', 'SiameseSlasher',
+]);
 const ALPHABET = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
 const DEFAULT_HERO = 'Fakhmolitionator';
+
+function cleanHeroName(value) {
+    if (typeof value !== 'string') return '';
+    const cleaned=value.normalize('NFKC').replace(/[\u0000-\u001f\u007f<>&"'`\\]/g,'').replace(/\s+/g,' ').trim();
+    return Array.from(cleaned).slice(0,24).join('');
+}
+function cleanBattleNames(value) {
+    return Array.isArray(value) && value.length===2 ? value.map(cleanHeroName) : null;
+}
+
 const limit = 65536;
 const empty = () => ({role:null,code:null});
 const clamp = (n,a,b) => Math.max(a,Math.min(b,n));
@@ -103,7 +144,12 @@ export class RoomRelay {
    }
    if(m.type==='input'){
      if(!h.playing||!isGuest||!Number.isFinite(m.x)||!Number.isFinite(m.y))return;
-     let x=clamp(m.x,-1,1),y=clamp(m.y,-1,1),len=Math.hypot(x,y);if(len>1){x/=len;y/=len}send(host,{type:'input',x,y});return;
+     let x=clamp(m.x,-1,1),y=clamp(m.y,-1,1),len=Math.hypot(x,y);if(len>1){x/=len;y/=len}
+     const packet={type:'input',x,y};
+     if(Array.isArray(h.heroes)&&m.heroId===h.heroes[1]&&HEROES.has(m.heroId)){
+       const heroName=cleanHeroName(m.heroName);if(heroName){packet.heroId=m.heroId;packet.heroName=heroName;}
+     }
+     send(host,packet);return;
    }
    if(m.type==='action'){
      if(!h.playing||!isGuest||!['skill','skill2','ult'].includes(m.action)||(m.action==='skill'&&!Number.isFinite(m.angle)))return;
@@ -112,7 +158,8 @@ export class RoomRelay {
    if(m.type==='battle_state'){
      const ps=m.players;
      if(!h.playing||!isHost||!Array.isArray(ps)||ps.length!==2||!ps.every(p=>p&&typeof p==='object'&&p.data&&typeof p.data==='object')||!Array.isArray(m.shots)||m.shots.length>100||!Array.isArray(m.effects)||m.effects.length>80)return;
-     send(guest,{type:'battle_state',players:ps,shots:m.shots,effects:m.effects,winner:['P1','P2','DRAW'].includes(m.winner)?m.winner:null});return;
+     const packet={type:'battle_state',players:ps,shots:m.shots,effects:m.effects,winner:['P1','P2','DRAW'].includes(m.winner)?m.winner:null};
+     const names=cleanBattleNames(m.names);if(names)packet.names=names;send(guest,packet);return;
    }
    if(m.type==='state'){
      if(!h.playing||!isHost||!Array.isArray(m.positions)||m.positions.length!==4||!m.positions.every(Number.isFinite))return;
