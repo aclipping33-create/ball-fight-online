@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -69,6 +69,7 @@ body{font-family:system-ui,-apple-system,'Segoe UI',sans-serif;background:#21174
 #lanMoveInfo{font-size:11px!important;color:#695a80;font-weight:800}
 #lanBattleHud{height:30px!important;gap:8px!important;margin:7px auto!important;max-width:380px}
 #lanBattleHud span{display:flex;align-items:center;flex:1;padding:4px 10px;border:2px solid #30244f;border-radius:9px;font-size:11px!important;box-shadow:0 2px 0 #30244f}
+#lanBattleHud.party{height:52px!important;flex-wrap:wrap;gap:4px!important}#lanBattleHud.party span{flex:0 0 calc(50% - 4px);box-sizing:border-box;padding:2px 6px;font-size:9px!important}
 #lanHud1{background:#ffec9f}#lanHud2{background:#e2d4ff;justify-content:flex-end}
 #lanMoveCanvas{border:3px solid #30244f!important;border-radius:14px;box-shadow:0 4px 0 #9181bc!important}
 #lanMoveStick,#lanSkillStick,#lanUltBtn{border-color:#30244f!important;box-shadow:0 4px 0 #30244f, inset 0 4px 0 #ffffff99!important}
@@ -111,7 +112,7 @@ body.arena-modern #countdownText{font-weight:1000;letter-spacing:.03em}
 .lan-picker-tools{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:7px;margin-top:8px}.lan-picker-tools button{border:2px solid #30244f;border-radius:10px;background:#ffdf65;font:1000 9px system-ui,sans-serif;padding:6px 9px;box-shadow:0 2px 0 #30244f}
 .lan-hero-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px;max-height:230px;overflow-y:auto;padding:8px 3px 5px;margin-top:5px;overscroll-behavior:contain}.lan-hero-grid button{min-width:0;border:2px solid #30244f;border-radius:11px;background:#fff;padding:6px 3px;display:flex;flex-direction:column;align-items:center;gap:4px;font-family:Inter,system-ui,sans-serif}.lan-hero-grid button.is-selected{background:#fff0a8;outline:3px solid #7352df;outline-offset:1px}.lan-hero-grid .lan-hero-ball{width:36px;height:36px;border:3px solid #30244f;border-radius:50%;display:grid;place-items:center;font-size:17px;box-shadow:inset 0 3px 0 #ffffff70}.lan-hero-grid .lan-hero-label{font-size:8px;font-weight:900;line-height:1.15;text-align:center;overflow-wrap:anywhere;min-height:18px}
 .lan-hero-detail{max-height:118px;overflow-y:auto;border:2px solid #ded2f1;border-radius:11px;background:#fff;padding:8px;font-size:9px;line-height:1.4;color:#55476c;overscroll-behavior:contain}.lan-hero-detail b{color:#30244f}.lan-hero-detail div+div{margin-top:4px}
-.lan-player-names{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:9px}.lan-player-names>div{min-width:0;border:2px solid #30244f;border-radius:10px;padding:7px}.lan-player-names .p1{background:#fff0a8}.lan-player-names .p2{background:#e7dcff}.lan-player-names span{display:block;font-size:8px;font-weight:1000;color:#695a80}.lan-player-names strong{display:block;font-size:10px;margin-top:2px;overflow-wrap:anywhere}
+.lan-player-names{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:9px}.lan-player-names>div{min-width:0;border:2px solid #30244f;border-radius:10px;padding:7px}.lan-player-names .p1{background:#fff0a8}.lan-player-names .p2{background:#e7dcff}.lan-player-names .p3{background:#dcfce7}.lan-player-names .p4{background:#ffedd5}.lan-player-names span{display:block;font-size:8px;font-weight:1000;color:#695a80}.lan-player-names strong{display:block;font-size:10px;margin-top:2px;overflow-wrap:anywhere}
 
     </style>
     <style>
@@ -205,6 +206,165 @@ body.arena-modern #countdownText{font-weight:1000;letter-spacing:.03em}
         .active-damage-grid b{color:#30244f}
         @media(max-width:350px){.damage-number-input{width:76px}.damage-panel-title{font-size:19px}}
     </style>
+    <style>
+/* BALL FIGHT UI POLISH 2026 */
+/* Satu sistem visual bersama: ruang napas, target sentuh, dan tipografi yang konsisten. */
+:root{--ui-max:380px;--ui-room-max:400px;--ui-gap:10px;--ui-radius:15px}
+#homeScreen,#lanRoomOverlay,#lanMoveOverlay,#damageSettingsOverlay,#heroOverlay{line-height:1.45;-webkit-overflow-scrolling:touch}
+#homeScreen>*{max-width:var(--ui-max)}
+#homeScreen{gap:13px!important;padding:20px 16px 30px!important}
+#modeRow{display:none!important}
+.bf-brand{max-width:var(--ui-max);gap:14px}
+.bf-brand img{width:68px;height:68px;border-radius:19px}
+.bf-brand-title{font-size:27px;line-height:1.05}
+.bf-brand-sub{font-size:10px;line-height:1.5;letter-spacing:.09em}
+.bf-kicker{font-size:9px;line-height:1.3}
+#modeExplain,.bf-brand-sub,.mode-card,.rank-hint,.damage-panel-note,.lan-hero-detail,#lanBossDetail{overflow-wrap:anywhere;word-break:normal}
+/* Mode: ringkas dalam dua kolom, satu kolom pada layar sangat sempit. */
+#modePicker{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;max-width:var(--ui-max);width:100%}
+.mode-card{min-width:0;min-height:91px;box-sizing:border-box;align-items:flex-start;gap:8px;padding:11px 10px;border-radius:14px!important;position:relative}
+.mode-card .mode-dot{width:16px;height:16px;border-width:2px;margin-top:1px}
+.mode-card .mode-name{font-size:12px;line-height:1.25;letter-spacing:.02em}
+.mode-card .mode-desc{font-size:10px;line-height:1.4;margin-top:5px;font-weight:750}
+.mode-card .mode-badge{font-size:8px;padding:2px 5px;line-height:1.3}
+.mode-card.is-active{outline:2px solid #7352df;outline-offset:2px}
+#modeExplain{max-width:var(--ui-max);box-sizing:border-box;padding:10px 12px;font-size:11px!important;line-height:1.5;border-radius:13px!important;background:rgba(255,253,248,.82)!important}
+/* Wallet tidak lagi berdesakan dengan pesan status di sisi kanan. */
+.coin-wallet{max-width:var(--ui-max)!important;display:grid!important;grid-template-columns:1fr!important;gap:5px!important;padding:11px 13px!important;border-width:2px!important;border-radius:14px!important;font-size:12px!important;line-height:1.4}
+.coin-wallet strong{font-size:18px!important}
+.coin-wallet small{font-size:10px!important;line-height:1.4}
+.coin-wallet .coin-status-text{max-width:none!important;text-align:left!important;font-size:10px!important;line-height:1.4}
+/* Pemilihan hero dan slot. */
+#pickerBlock{max-width:var(--ui-max)!important;width:100%;gap:10px!important}
+#slotSelection{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;width:100%}
+.slot-chip{min-width:0;box-sizing:border-box;justify-content:space-between;padding:5px 6px 5px 10px!important;border-radius:12px!important}
+.slot-chip .slot-name{min-width:0;max-width:none!important;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:10px}
+.slot-chip button{min-height:30px;padding:4px 8px;font-size:9px}
+.hero-categories{gap:5px}
+.hero-categories button{min-width:0;min-height:38px;font-size:9px!important;line-height:1.15;border-radius:10px}
+.hero-search{min-height:42px;font-size:12px!important;padding:9px 12px;box-sizing:border-box}
+#avatarRow{max-height:178px;gap:7px!important;padding:5px 3px 8px!important;scrollbar-color:#b7a9ec transparent}
+#avatarRow>button{min-height:69px;box-sizing:border-box;border-radius:12px}
+#avatarRow>button>span:first-child{width:44px!important;height:44px!important}
+#avatarRow>button>span:last-child{font-size:9px!important;line-height:1.2!important;overflow-wrap:anywhere}
+#detailBox{max-height:210px!important;min-height:126px;padding:13px!important;border-radius:15px!important;line-height:1.45;scrollbar-color:#b7a9ec transparent}
+#detailBox .text-\[10px\],#heroDetail .text-\[10px\]{font-size:11px!important;line-height:1.45}
+#detailBox .text-\[9px\],#heroDetail .text-\[9px\]{font-size:10px!important}
+.active-damage-grid span{font-size:10px;line-height:1.4}
+#assignButtons{gap:8px}
+#assignButtons button{min-height:44px;font-size:11px!important;border-radius:12px!important}
+.coin-hero-action{font-size:11px!important;line-height:1.4}
+.coin-hero-action button{min-height:38px;border-radius:9px}
+.coin-lock-badge{font-size:9px!important}
+/* Rank otomatis tampil sebagai status ringkas, bukan mode atau toggle baru. */
+#rankPanel{max-width:var(--ui-max);width:100%}
+.rank-card{grid-template-columns:1fr!important;gap:8px!important;padding:12px 13px;border-radius:14px;background:#fffdf8;box-shadow:0 3px 0 #30244f}
+.rank-top strong{font-size:12px;letter-spacing:.03em}
+.rank-top div div{font-size:11px;line-height:1.4}
+.rank-icon{font-size:23px}
+.rank-hint{grid-column:1!important;font-size:11px;line-height:1.45}
+#rankPanel.is-ranked .rank-card{background:#fff1a8;border-color:#493098}
+#rankPanel.is-ranked .rank-hint{color:#3f3109;font-weight:900}
+/* Tombol lobby: hierarki jelas dan ukuran sentuh konsisten. */
+#homeScreen>div[style*='display:flex;gap:8px']{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px!important;width:100%;max-width:var(--ui-max)!important}
+#homeScreen>div[style*='display:flex;gap:8px'] button{min-width:0;min-height:46px;padding:10px 8px!important;font-size:10px!important;line-height:1.3}
+#homeScreen>button[onclick='showOnlineRoom()'],.damage-settings-open,#homeScreen>button:last-child{max-width:var(--ui-max)!important;width:100%;min-height:47px;box-sizing:border-box;border-radius:13px!important;font-size:12px!important;line-height:1.3}
+#homeScreen>button:last-child{min-height:53px;font-size:17px!important}
+#mazeHeroBtn,#botHeroBtn{max-width:var(--ui-max);min-height:46px;line-height:1.4}
+#botRow,#botHint,#ffaHint{max-width:var(--ui-max);box-sizing:border-box;font-size:11px!important;line-height:1.45}
+/* Hero overlay Arena. */
+#heroOverlay{padding:16px 14px 22px!important;gap:11px!important}
+#heroOverlay>div,#heroOverlay>input{max-width:var(--ui-max);width:100%;margin-left:auto;margin-right:auto;box-sizing:border-box}
+#heroOverlay button{min-height:39px;border-radius:10px!important}
+#heroGrid{max-height:39vh!important;gap:7px!important;padding:3px 2px 7px!important}
+#heroGrid>button{min-height:70px;padding:5px 2px!important}
+#heroDetail{border-width:2px!important;border-radius:14px!important;padding:12px!important;line-height:1.45}
+/* Room online/LAN: konten dibatasi lebarnya dan setiap kelompok punya ritme yang sama. */
+#lanRoomOverlay{padding:20px 16px 30px!important;line-height:1.45}
+#lanRoomOverlay>*{box-sizing:border-box}
+#lanRoomOverlay>h2,#lanRoomOverlay>p,#lanStatus,#onlineSettings,#lanControls,#lanHeroBox,#lanBossPicker,#lanInvite,#lanReadyBox,#lanStartTest,#lanLeave,#lanRoomOverlay>button[onclick='closeLANRoom()']{width:100%;max-width:var(--ui-room-max);margin-left:auto;margin-right:auto}
+#lanRoomOverlay>p{font-size:12px!important;line-height:1.55}
+#lanStatus,#lanHeroBox,#lanInvite{border-radius:15px!important;box-shadow:3px 3px 0 #c8bcea!important}
+#onlineSettings{border-radius:13px!important;line-height:1.45}
+#onlineSettings input{min-height:43px;font-size:13px!important}
+#lanControls{gap:11px!important}
+#lanPartyMode{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px!important;width:100%}
+#lanPartyMode button{min-width:0;min-height:45px;padding:9px 7px!important;font-size:10px!important;line-height:1.3}
+#lanModeBoss{grid-column:1/-1;background:#ffedd5!important}
+#lanCreate,#lanJoin{min-height:46px}
+#lanCode{min-height:49px;text-align:center;font-size:18px!important;letter-spacing:4px!important}
+#lanBossPicker{border-radius:15px!important;box-shadow:3px 3px 0 #e6c9a8;padding:12px!important}
+#lanBossGrid{gap:7px!important}
+#lanBossGrid button{min-height:43px;font-size:10px!important;line-height:1.25;border-radius:10px!important}
+#lanBossGrid button:last-child{grid-column:1/-1}
+#lanBossDetail{font-size:11px!important;line-height:1.5}
+.lan-hero-box{margin-top:12px}
+.lan-selected-hero{padding:10px}
+.lan-selected-hero strong{font-size:14px;line-height:1.3}
+.lan-selected-hero small{font-size:10px}
+.lan-picker-tools button{min-height:40px;font-size:10px}
+.lan-hero-grid{grid-template-columns:repeat(3,minmax(0,1fr));max-height:240px;gap:7px;padding:8px 3px}
+.lan-hero-grid button{min-height:66px;border-radius:10px}
+.lan-hero-grid .lan-hero-label{font-size:9px;line-height:1.25}
+.lan-hero-detail{max-height:132px;font-size:10px;line-height:1.5;padding:9px}
+.lan-player-names{gap:7px}
+.lan-player-names>div{padding:8px}
+.lan-player-names span{font-size:9px;line-height:1.35}
+.lan-player-names strong{font-size:11px;line-height:1.35}
+#lanReadyBox{border-radius:15px!important;box-shadow:3px 3px 0 #c8bcea;padding:12px!important}
+#lanReadyBtn{min-height:46px;font-size:12px!important}
+#lanReadyList{display:grid;gap:4px;font-size:11px!important;line-height:1.4}
+#lanStartTest,#lanLeave,#lanRoomOverlay>button[onclick='closeLANRoom()']{min-height:46px;margin-top:12px!important;font-size:12px!important}
+#lanShare{min-height:42px}
+#lanHostIP,#lanInviteLink{min-height:40px;box-sizing:border-box}
+/* HUD dan overlay battle. */
+#lanMoveOverlay{padding:12px 12px 22px!important}
+#lanMoveOverlay>h2,#lanMoveOverlay>p,#lanBattleHud,#lanBossBar,#lanMoveOverlay>div{max-width:var(--ui-room-max);margin-left:auto;margin-right:auto;box-sizing:border-box}
+#lanBattleHud{height:auto!important;min-height:32px;gap:6px!important}
+#lanBattleHud span{min-width:0;font-size:10px!important;line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding:5px 7px}
+#lanBattleHud.party{height:auto!important;min-height:52px}
+#lanBattleHud.party span{font-size:9px!important;padding:4px 6px}
+#lanBossBar{max-width:380px;padding:8px!important;line-height:1.4;border-radius:11px}
+#lanBossName,#lanBossHp{font-size:10px}
+#lanBossAttack{font-size:11px;line-height:1.4}
+#lanBossScale{font-size:9px!important;line-height:1.45;overflow-wrap:anywhere}
+#lanMoveCanvas{max-width:100%;height:auto}
+#lanMoveOverlay button{min-height:38px}
+#lanWinner{max-width:calc(100% - 36px);font-size:13px!important;line-height:1.35}
+/* Damage dan nama permanen. */
+#damageSettingsOverlay{gap:12px!important;padding:16px 14px 26px!important}
+#damageSettingsOverlay>.w-full{max-width:var(--ui-max)!important}
+.damage-panel-card{padding:14px;border-radius:15px}
+.damage-panel-title{font-size:23px;line-height:1.15}
+.damage-panel-subtitle{font-size:12px;line-height:1.5}
+.damage-panel-button{min-height:39px;font-size:11px;border-radius:10px}
+.damage-panel-select,.damage-number-input,.damage-name-input{min-height:42px;font-size:12px;box-sizing:border-box}
+.damage-field{gap:5px 10px;padding:12px 0}
+.damage-field-label{font-size:12px;line-height:1.4}
+.damage-field-effective{font-size:11px;line-height:1.4}
+.damage-panel-note{font-size:11px;line-height:1.5}
+.damage-name-meta{font-size:10px;line-height:1.45}
+.damage-name-reset{font-size:10px;min-height:30px}
+/* Fokus keyboard dan gerakan yang nyaman. */
+#homeScreen button:focus-visible,#lanRoomOverlay button:focus-visible,#lanMoveOverlay button:focus-visible,#damageSettingsOverlay button:focus-visible,#heroOverlay button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #0ea5e9;outline-offset:2px}
+@media(max-width:350px){
+ :root{--ui-max:100%;--ui-room-max:100%}
+ #homeScreen{padding:16px 12px 26px!important}
+ #modePicker{grid-template-columns:1fr}
+ .mode-card{min-height:0;padding:10px 11px}
+ .mode-card .mode-desc{font-size:10px}
+ .bf-brand-title{font-size:24px}
+ .bf-brand img{width:60px;height:60px}
+ .hero-categories button{font-size:8px!important;padding:2px 1px}
+ #avatarRow>button>span:first-child{width:40px!important;height:40px!important}
+ #lanRoomOverlay{padding:16px 12px 26px!important}
+ .lan-hero-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .damage-panel-title{font-size:21px}
+ .damage-name-meta{align-items:flex-start;flex-direction:column}
+}
+@media(prefers-reduced-motion:reduce){#homeScreen *,#lanRoomOverlay *,#lanMoveOverlay *,#damageSettingsOverlay *{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
+
+    </style>
 </head>
 <body class="text-xs">
 
@@ -243,7 +403,6 @@ body.arena-modern #countdownText{font-weight:1000;letter-spacing:.03em}
                     <label for="gameMode">MODE</label>
                     <select id="gameMode" class="hidden" onchange="handleGameModeChange()">
                         <option value="1v1">1 VS 1</option>
-                        <option value="rank">RANK 1 VS 1 (VS BOT)</option>
                         <option value="ffa">FREE FOR ALL</option>
                         <option value="team">3 VS 3</option>
                         <option value="maze">ARENA KOTAK (VS BOT)</option>
@@ -285,8 +444,7 @@ body.arena-modern #countdownText{font-weight:1000;letter-spacing:.03em}
             <div id="botHint" class="hidden w-full max-w-[340px] bg-purple-100 border-2 border-black p-2 text-[10px] font-bold" style="font-family: Inter, system-ui, sans-serif;">EXTREME membaca gaya hero lawan, menjaga jarak, menghindari ancaman, dan memprediksi gerakan.</div>
             <div id="rankPanel" class="hidden w-full max-w-[340px]" style="font-family:system-ui,sans-serif;">
                 <div class="rank-card">
-                    <div class="rank-top"><span class="rank-icon">🏆</span><div><strong>RANK ARENA</strong><div id="rankSummary">Bronze · 0 poin</div></div></div>
-                    <label class="rank-toggle"><input id="rankToggle" type="checkbox" onchange="updateRankPanel()"><span>MAIN RANKED</span></label>
+                    <div class="rank-top"><span class="rank-icon">🏆</span><div><strong>RANK 1V1 PANTUL</strong><div id="rankSummary">Bronze · 0 poin</div></div></div>
                     <div id="rankHint" class="rank-hint"></div>
                 </div>
             </div>
@@ -356,14 +514,15 @@ body.arena-modern #countdownText{font-weight:1000;letter-spacing:.03em}
         <div id="lanRoomOverlay" style="display:none;position:absolute;inset:0;z-index:90;background:#e5e0e8;padding:24px;overflow:auto;touch-action:pan-y;font-family:Inter,system-ui,sans-serif;color:#111827;">
             <div id="roomKicker" class="bf-kicker">✦ WI-FI / HOTSPOT PARTY</div>
             <h2 id="roomTitle" style="font-size:22px;margin:10px 0">DUEL LAN</h2>
-            <p style="font-size:13px;line-height:1.5">Pilih hero masing-masing. Host dapat memulai saat dua pemain siap.</p>
+            <p style="font-size:13px;line-height:1.5">Pilih 1v1 atau 2v2 saat membuat room. Setiap pemain memakai satu hero; online tidak memakai kunci koin selama testing.</p>
             <div id="lanStatus" role="status" style="background:#fff;border:3px solid #111;padding:14px;line-height:1.5;font-size:14px;min-height:58px;">Buat room atau masukkan kode dari teman.</div>
             <div id="onlineSettings" style="display:none;margin-top:12px;background:#fff;border:2px solid #30244f;border-radius:12px;padding:12px;">
                 <label for="onlineServer" style="font-weight:800;font-size:13px;">ALAMAT SERVER ONLINE</label>
-                <input id="onlineServer" type="url" inputmode="url" autocomplete="url" placeholder="https://nama-server.onrender.com" style="display:block;width:100%;box-sizing:border-box;padding:10px;margin-top:6px;border:2px solid #30244f;border-radius:9px;font-size:15px;">
-                <div style="font-size:11px;line-height:1.4;margin-top:5px;">Isi alamat server yang sama di kedua HP. Server gratis bisa butuh sekitar 1 menit untuk bangun.</div>
+                <input id="onlineServer" type="url" inputmode="url" autocomplete="url" placeholder="https://ball-fight.nama.workers.dev" style="display:block;width:100%;box-sizing:border-box;padding:10px;margin-top:6px;border:2px solid #30244f;border-radius:9px;font-size:15px;">
+                <div style="font-size:11px;line-height:1.4;margin-top:5px;">Isi URL Cloudflare Workers yang sama di semua HP.</div>
             </div>
             <div id="lanControls" style="display:flex;flex-direction:column;gap:10px;margin-top:16px;">
+                <div id="lanPartyMode" style="display:flex;gap:8px"><button id="lanMode2" type="button" aria-pressed="true" onclick="lanSetPartySize(2)" style="flex:1;padding:11px;background:#fde047;border:3px solid #111;font-weight:800">1V1 · 2 PEMAIN</button><button id="lanMode4" type="button" aria-pressed="false" onclick="lanSetPartySize(4)" style="flex:1;padding:11px;background:#fff;border:3px solid #111;font-weight:800">2V2 · 4 PEMAIN</button></div>
                 <button id="lanCreate" onclick="lanCreateRoom()" style="padding:13px;background:#fde047;border:3px solid black;font-weight:800;">BUAT ROOM</button>
                 <input id="lanCode" aria-label="Kode room" placeholder="KODE ROOM" maxlength="4" autocomplete="off" autocapitalize="characters" style="padding:12px;text-transform:uppercase;font-size:18px;letter-spacing:3px;border:3px solid black;width:100%;box-sizing:border-box;">
                 <button id="lanJoin" onclick="lanJoinRoom()" style="padding:13px;background:#c4b5fd;border:3px solid black;font-weight:800;">GABUNG ROOM</button>
@@ -381,8 +540,10 @@ body.arena-modern #countdownText{font-weight:1000;letter-spacing:.03em}
                 <div id="lanHeroGrid" class="lan-hero-grid" aria-label="Daftar hero online"></div>
                 <div id="lanHeroDetail" class="lan-hero-detail"></div>
                 <div id="lanHeroNames" class="lan-player-names">
-                    <div class="p1"><span id="lanPlayer1Tag">P1 · HOST</span><strong id="lanPlayer1Name">Fakhmolitionator</strong></div>
-                    <div class="p2"><span id="lanPlayer2Tag">P2 · GUEST</span><strong id="lanPlayer2Name">Fakhmolitionator</strong></div>
+                    <div class="p1" id="lanPlayer1Row"><span id="lanPlayer1Tag">P1 · HOST</span><strong id="lanPlayer1Name">Fakhmolitionator</strong></div>
+                    <div class="p2" id="lanPlayer2Row"><span id="lanPlayer2Tag">P2 · GUEST</span><strong id="lanPlayer2Name">Fakhmolitionator</strong></div>
+                    <div class="p3" id="lanPlayer3Row" style="display:none"><span id="lanPlayer3Tag">P3 · GUEST · TIM 1</span><strong id="lanPlayer3Name">Fakhmolitionator</strong></div>
+                    <div class="p4" id="lanPlayer4Row" style="display:none"><span id="lanPlayer4Tag">P4 · GUEST · TIM 2</span><strong id="lanPlayer4Name">Fakhmolitionator</strong></div>
                 </div>
                 <select id="lanHero" class="hidden" onchange="lanChooseHero(this.value)" aria-hidden="true" tabindex="-1"></select>
             </div>
@@ -404,7 +565,7 @@ body.arena-modern #countdownText{font-weight:1000;letter-spacing:.03em}
         <div id="lanMoveOverlay" style="display:none;position:absolute;inset:0;z-index:100;background:#e5e0e8;padding:16px;box-sizing:border-box;touch-action:pan-y;overflow:auto;font-family:Inter,system-ui,sans-serif;color:#111827;">
             <h2 style="font-size:19px;margin:4px 0">DUEL HERO · LAN</h2>
             <p id="lanMoveInfo" style="font-size:12px;margin:4px 0;">Fakhmolitionator vs Fakhmolitionator</p>
-            <div id="lanBattleHud" style="font-size:12px;font-weight:800;display:flex;justify-content:space-between;gap:5px;margin:4px 0;height:18px;white-space:nowrap;"><span id="lanHud1">P1 HP 450</span><span id="lanHud2">P2 HP 450</span></div>
+            <div id="lanBattleHud" style="font-size:12px;font-weight:800;display:flex;justify-content:space-between;gap:5px;margin:4px 0;height:18px;white-space:nowrap;"><span id="lanHud1">P1 HP 450</span><span id="lanHud2">P2 HP 450</span><span id="lanHud3" style="display:none">P3 HP 450</span><span id="lanHud4" style="display:none">P4 HP 450</span></div>
             <div id="lanWinner" role="status" style="display:none;position:absolute;z-index:2;top:12px;left:18px;right:18px;background:#fde047;border:3px solid #111;padding:6px;text-align:center;font-weight:800;font-size:14px;"></div>
             <canvas id="lanMoveCanvas" width="900" height="900" style="width:min(100%,380px);display:block;aspect-ratio:1;background:#f8fafc;border:3px solid #111;box-sizing:border-box;margin:auto;"></canvas>
             <div style="display:flex;align-items:center;justify-content:space-between;margin-top:8px;gap:5px;">
@@ -7115,7 +7276,7 @@ var qrcode = function() {
                 }
             }
             draw(){
-                if(this.phantomVeil&&((lanMatchActive&&this!==lanFighters[lanRole==='host'?0:1])||(!lanMatchActive&&mazeMode&&!duelMode&&this!==p1)))return;
+                if(this.phantomVeil&&((lanMatchActive&&this!==lanFighters[lanLocalSlot()])||(!lanMatchActive&&mazeMode&&!duelMode&&this!==p1)))return;
                 const x=this.x,y=this.y,r=this.radius,v=Math.hypot(this.vx,this.vy)||1,dx=this.vx/v,dy=this.vy/v;
                 ctx.save();if(this.phantomVeil)ctx.globalAlpha=.27;
                 for(let i=3;i>=1;i--){ctx.beginPath();ctx.arc(x-dx*(r+i*12),y-dy*(r+i*12)+Math.sin(this.phantomPhase+i)*4,Math.max(4,r*(.6-i*.12)),0,Math.PI*2);ctx.fillStyle='rgba(88,28,135,'+(.12+i*.04)+')';ctx.fill();}
@@ -7470,7 +7631,6 @@ var qrcode = function() {
         };
         let mazeMode = false;
         let duelMode = false;
-        let rankMode = false;
         let botLevel = 'normal';
         let mazeWalls = [];   // kotak dinding {x, y, w, h}
         let mazeOpen = new Set();
@@ -8009,7 +8169,7 @@ var qrcode = function() {
                 if (d > 4) { mvx = dx / d; mvy = dy / d; }
             }
             if (bot.staggerTimer > 0) { mvx = 0; mvy = 0; }
-            const sp = ((bot instanceof Deadbibi || bot instanceof Phantom || bot instanceof FillerHero || bot instanceof ExpansionHero) ? fighterSpeed(bot) : PLAYER_SPEED) * lvl.speed;
+            const sp = fighterSpeed(bot) * lvl.speed;
             bot.vx = mvx * sp;
             bot.vy = mvy * sp;
 
@@ -9484,22 +9644,14 @@ var qrcode = function() {
         function saveRankPoints(points){rankMemory=Math.max(0,Math.floor(points));try{localStorage.setItem(RANK_KEY,String(rankMemory));return true;}catch(_){return false;}}
         function rankInfo(points){let i=0;while(i+1<RANKS.length&&points>=RANKS[i+1][1])i++;return {name:RANKS[i][0],next:i+1<RANKS.length?RANKS[i+1]:null};}
         function updateRankPanel(){
-            const panel=document.getElementById('rankPanel'),toggle=document.getElementById('rankToggle');if(!panel||!toggle)return;
-            const mode=document.getElementById('gameMode').value;
-            const arena=mode==='maze',rankModeOn=mode==='rank';
-            const extreme=document.getElementById('botDifficulty').value==='extreme';
-            // Panel rank tampil di mode RANK dan di mode arena.
-            panel.classList.toggle('hidden',!(arena||rankModeOn));
-            // Di mode RANK, ranked selalu aktif jadi toggle disembunyikan.
-            toggle.parentElement.classList.toggle('hidden',rankModeOn);
-            toggle.disabled=!(arena&&extreme);
-            toggle.parentElement.classList.toggle('is-disabled',toggle.disabled);
-            if(toggle.disabled)toggle.checked=false;
+            const panel=document.getElementById('rankPanel');if(!panel)return;
+            const eligible=document.getElementById('gameMode').value==='1v1';
+            const randomEnemy=eligible&&document.getElementById('p2Select').value==='random';
+            panel.classList.toggle('hidden',!eligible);panel.classList.toggle('is-ranked',randomEnemy);
             const pts=readRankPoints(),r=rankInfo(pts);document.getElementById('rankSummary').textContent=r.name+' · '+pts+' poin'+(r.next?' / '+r.next[1]:'');
-            document.getElementById('rankHint').textContent=rankModeOn
-                ?'Mode rank aktif. Menang +20 poin, kalah −10 poin, seri atau keluar 0 poin.'
-                :(arena&&!extreme?'Pilih bot EXTREME untuk membuka ranked.'
-                :(toggle.checked?'Ranked aktif · menang +20, kalah −10, seri/keluar 0.':'Ranked mati · pertandingan biasa.'));
+            document.getElementById('rankHint').textContent=randomEnemy
+                ?'RANKED AKTIF · lawan ACAK. Menang +20 poin, kalah −10 poin, seri atau keluar 0.'
+                :'Ranked nonaktif. Pilih kartu ACAK untuk P2 agar duel ini menjadi ranked.';
         }
         function recordRankResult(){
             if(!rankMatch||rankRecorded)return '';rankRecorded=true;rankMatch=false;
@@ -9521,13 +9673,8 @@ var qrcode = function() {
         const MODE_INFO = {
             '1v1': {
                 name: '1 VS 1',
-                desc: 'Satu hero melawan satu hero di arena 600x600. P1 kamu, P2 bot.',
-                badge: '', explain: 'Mode klasik. Pilih hero P1 dan P2 di bawah, lalu tekan FIGHT! للتحكم memakai joystick, skill, dan ultimate.'
-            },
-            'rank': {
-                name: 'RANK 1 VS 1 (VS BOT)',
-                desc: 'Tanding rank 1v1 melawan bot. Menang +20 poin, kalah -10 poin.',
-                badge: 'RANK', explain: 'Tanding rank 1v1 melawan bot. Menang dapat +20 poin rank, kalah -10 poin, seri 0. Lawan bisa diacak lewat tombol ACAK di slot P2. Pilih level bot EXTREME untuk lawan paling kuat.'
+                desc: 'Duel pantul 600×600. P2 ACAK mengaktifkan ranked.',
+                badge: '', explain: 'Mode 1v1 pantul. Pilih hero P1 dan P2, lalu tekan FIGHT. Ranked hanya aktif jika P2 memakai kartu ACAK. Menang +20 poin, kalah −10 poin, seri atau keluar 0.'
             },
             'ffa': {
                 name: 'FREE FOR ALL',
@@ -9541,8 +9688,8 @@ var qrcode = function() {
             },
             'maze': {
                 name: 'ARENA KOTAK (VS BOT)',
-                desc: 'Labirin kotak 900x900 melawan bot. Ada rank dan level bot EXTREME.',
-                badge: 'RANK', explain: 'Arena labirin dengan dinding. Pilih hero kamu dan hero bot, atau biarkan bot diacak. Level bot EXTREME juga bisa爬起来 rank.'
+                desc: 'Labirin kotak 900×900 melawan bot dengan level EXTREME.',
+                badge: '', explain: 'Arena labirin dengan dinding. Pilih hero kamu dan hero bot, atau biarkan bot diacak. Level EXTREME membuat bot lebih adaptif. Mode ini tidak mengaktifkan ranked.'
             },
             'duel': {
                 name: 'DUEL LOKAL (2 PEMAIN)',
@@ -9550,7 +9697,7 @@ var qrcode = function() {
                 badge: '2P', explain: 'Bermain di satu HP dengan teman. Serangan dasar otomatis, tapi skill dan ultimate harus ditekan manual oleh masing-masing pemain.'
             }
         };
-        const MODE_ORDER = ['1v1', 'rank', 'ffa', 'team', 'maze', 'duel'];
+        const MODE_ORDER = ['1v1', 'ffa', 'team', 'maze', 'duel'];
 
         function buildModePicker() {
             const box = document.getElementById('modePicker');
@@ -9640,17 +9787,16 @@ var qrcode = function() {
             const team = mode === 'team';
             const duel = mode === 'duel';
             const maze = mode === 'maze';
-            const rank = mode === 'rank';
             document.getElementById('pickerBlock').classList.toggle('hidden', maze);
             document.getElementById('mazeHeroBtn').classList.toggle('hidden', !maze);
             document.getElementById('botHeroBtn').classList.toggle('hidden', !maze);
-            document.getElementById('botRow').classList.toggle('hidden', !maze && !rank);
+            document.getElementById('botRow').classList.toggle('hidden', !maze);
             updateBotHint();
             document.getElementById('slotSelection').classList.toggle('hidden', ffa || team);
             document.getElementById('assignButtons').classList.toggle('hidden', ffa);
             document.getElementById('ffaHint').classList.toggle('hidden', !(ffa || team));
             const start = document.querySelector('#homeScreen > button:last-child');
-            if (start) start.innerText = ffa ? 'START FREE FOR ALL' : (team ? 'START 3 VS 3' : (maze ? 'START ARENA' : (duel ? 'START DUEL' : (rank ? 'START RANK' : 'FIGHT!'))));
+            if (start) start.innerText = ffa ? 'START FREE FOR ALL' : (team ? 'START 3 VS 3' : (maze ? 'START ARENA' : (duel ? 'START DUEL' : 'FIGHT!')));
             refreshPicker();
             refreshMazeHeroBtn();
             refreshModePicker();
@@ -9771,6 +9917,7 @@ var qrcode = function() {
                 const dim = (ffa && !inFFA) || (team && !(in1 || in2));
                 btn.style.opacity = dim ? '0.58' : '1';
             });
+            updateRankPanel();
         }
 
         // --- UI PANEL DAMAGE (lobby) ---
@@ -10017,7 +10164,6 @@ var qrcode = function() {
             isTeamMode = document.getElementById('gameMode').value === 'team';
             const modeVal = document.getElementById('gameMode').value;
             duelMode = modeVal === 'duel';
-            rankMode = modeVal === 'rank';
             mazeMode = modeVal === 'maze' || duelMode;
             document.body.classList.toggle('arena-modern',mazeMode);
             // Arena bot dan duel lokal: 900x900 (2,25x luas); mode lain tetap 600x600.
@@ -10025,9 +10171,8 @@ var qrcode = function() {
             canvas.width = canvas.height = MAZE_N * MAZE_S;
             duelCamera = null;
             botLevel = document.getElementById('botDifficulty').value;
-            // Rank aktif di mode RANK (1v1 vs bot) atau di mode arena dengan
-            // bot EXTREME dan checkbox ranked dicentang.
-            rankMatch=(rankMode || (modeVal==='maze' && botLevel==='extreme')) && (rankMode || document.getElementById('rankToggle').checked);
+            // Ranked hanya duel 1v1 pantul dengan hero musuh yang masih ACAK.
+            rankMatch=modeVal==='1v1'&&document.getElementById('p2Select').value==='random';
             rankRecorded=false;
             document.getElementById('rankResult').classList.add('hidden');
             document.getElementById('mazeControls').classList.toggle('hidden', !mazeMode);
@@ -10050,7 +10195,7 @@ var qrcode = function() {
                 generateMaze();
                 const p1Type = resolveHeroId(document.getElementById('p1Select').value);
                 const ids = CHARACTERS.map(c => c.id);
-                const botType = botHeroSel !== 'random' ? botHeroSel : ids[Math.floor(Math.random() * ids.length)];
+                const botType = botHeroSel !== 'random' ? botHeroSel : randomHeroId(p1Type);
                 p1 = createCharacter(p1Type, 0, 0, false);
                 p1.x = cellCenter(0, 0).x; p1.y = cellCenter(0, 0).y;
                 p1.isBot = false;
@@ -10101,16 +10246,16 @@ var qrcode = function() {
                 document.getElementById('p1NameLabel').innerText = 'FREE FOR ALL';
                 document.getElementById('p2NameLabel').innerText = `${gamePlayers.length} FIGHTERS`;
             } else {
-                // Mode RANK selalu mengacak kedua hero; 1v1 biasa mengikuti pilihan lobby.
-                const p1Type = resolveHeroId(rankMode ? 'random' : document.getElementById('p1Select').value);
-                const p2Type = resolveHeroId(rankMode ? 'random' : document.getElementById('p2Select').value, p1Type);
+                // P1 mengikuti pilihan pemain; hanya P2 yang diacak untuk ranked.
+                const p1Type = resolveHeroId(document.getElementById('p1Select').value);
+                const p2Type = resolveHeroId(document.getElementById('p2Select').value, p1Type);
                 p1 = createCharacter(p1Type, 150, 300, false);
                 p2 = createCharacter(p2Type, 450, 300, true);
                 p1.isBot = false; p2.isBot = true;
                 p1.hudSlot = 'p1'; p2.hudSlot = 'p2';
                 gamePlayers = [p1, p2];
                 document.getElementById('p1NameLabel').innerText = p1.name;
-                document.getElementById('p2NameLabel').innerText = rankMode ? `BOT · ${BOT_LEVELS[botLevel].label}` : p2.name;
+                document.getElementById('p2NameLabel').innerText = rankMatch ? `BOT RANKED · ${p2.name}` : p2.name;
             }
 
             decorateEnergyBar(p1, 'p1');
@@ -10303,7 +10448,7 @@ var qrcode = function() {
         function closeLANRoom() {
             roomRequestGeneration++;
             if (lanSocket) { const s = lanSocket; lanSocket = null; s.close(); }
-            lanInRoom = false; lanPending = false; lanRole = null; lanCount = 0; lanEndMovementTest(); lanButtons();
+            lanInRoom = false; lanPending = false; lanRole = null; lanSlot=null;lanCount = 0; lanEndMovementTest(); lanButtons();
             document.getElementById('lanRoomOverlay').style.display = 'none';
         }
         async function lanRequest(message) {
@@ -10316,7 +10461,7 @@ var qrcode = function() {
             let wsAddress;
             if(roomNetwork==='online'){
                 const base=getOnlineBase();
-                if(!base){lanPending=false;lanStatus('Masukkan alamat HTTPS server online yang benar, misalnya https://nama.onrender.com');lanButtons();return;}
+                if(!base){lanPending=false;lanStatus('Masukkan alamat HTTPS server online yang benar, misalnya https://ball-fight.nama.workers.dev');lanButtons();return;}
                 onlineServerBase=base;try{localStorage.setItem('ballFightOnlineServer',base)}catch(_){}
                 lanStatus('Menghubungkan server online… Jika server tidur, tunggu sekitar 1 menit.');
                 try{
@@ -10331,7 +10476,7 @@ var qrcode = function() {
                         if(generation===roomRequestGeneration)await new Promise(resolve=>setTimeout(resolve,2500));
                     }
                     if(!ready)throw new Error('health-timeout');
-                }catch(_){if(generation!==roomRequestGeneration)return;lanPending=false;lanStatus('Server tidak terhubung. Periksa alamat, internet, dan status Render, lalu coba lagi.');lanButtons();return;}
+                }catch(_){if(generation!==roomRequestGeneration)return;lanPending=false;lanStatus('Server tidak terhubung. Periksa alamat, internet, dan deployment Cloudflare Workers, lalu coba lagi.');lanButtons();return;}
                 if(generation!==roomRequestGeneration)return;
                 wsAddress=base.replace(/^http/,'ws')+'/room';
             }else{lanStatus('Menghubungkan ke server LAN...');wsAddress=(location.protocol === 'https:' ? 'wss:' : 'ws:') + '//' + location.host + '/room';}
@@ -10342,21 +10487,25 @@ var qrcode = function() {
                 if (lanSocket !== s) return;
                 let m; try { m = JSON.parse(event.data); } catch (_) { return; }
                 if (m.type === 'input' && lanRole === 'host') {
-                    lanRemoteInput.x=m.x;lanRemoteInput.y=m.y;lanRemoteAt=performance.now();
-                    if(m.heroId===lanHeroes[1]&&typeof m.heroName==='string')lanApplyRemoteHeroProfile(m.heroId,m.heroName);
+                    const slot=Number.isInteger(m.slot)?m.slot:1;if(slot<=0||slot>=lanHeroes.length)return;
+                    lanRemoteInputs[slot]={x:m.x,y:m.y};lanRemoteTimes[slot]=performance.now();lanRemoteAt=lanRemoteTimes[slot];
+                    if(m.heroId===lanHeroes[slot]&&typeof m.heroName==='string')lanApplyRemoteHeroProfile(m.heroId,m.heroName,slot);
                     return;
                 }
-                if (m.type === 'action' && lanRole === 'host') { lanDoAction(1, m.action, m.angle); return; }
-                if (m.type === 'battle_state' && lanRole === 'guest' && Array.isArray(m.players) && m.players.length === 2) { lanApplySnapshot(m); return; }
+                if (m.type === 'action' && lanRole === 'host') { const slot=Number.isInteger(m.slot)?m.slot:1;lanDoAction(slot,m.action,m.angle); return; }
+                if (m.type === 'battle_state' && lanRole === 'guest' && Array.isArray(m.players) && ((lanRoomMode==='boss'&&m.players.length>=1&&m.players.length<=4)||[2,4].includes(m.players.length))) { lanApplySnapshot(m); return; }
                 lanPending = false;
-                if (Array.isArray(m.heroes) && m.heroes.length===2) lanHeroes = m.heroes.slice();
+                if(Array.isArray(m.ready))lanReadyStates=m.ready.slice();
+                if(typeof m.mode==='string')lanRoomMode=m.mode;
+                if(typeof m.bossId==='string'&&BOSS_DEFS.some(b=>b.id===m.bossId))lanBossSelected=m.bossId;
+                if (Array.isArray(m.heroes) && [2,4].includes(m.heroes.length)) {lanHeroes = m.heroes.slice();lanCapacity=m.heroes.length;}
                 if (m.type === 'heroes') { lanButtons(); return; }
-                if (m.type === 'created') { lanRoomCode=m.code; lanInRoom = true; lanRole = 'host'; lanCount = 1; lanFindHostIP(); lanStatus('Kode room: ' + m.code + ' — 1/2 pemain. Berikan kode ini ke teman.'); }
-                else if (m.type === 'joined') { lanRoomCode=m.code; lanInRoom = true; lanRole = 'guest'; lanCount = 2; lanStatus('Berhasil masuk room ' + m.code + ' — 2/2 pemain. Tunggu host memulai duel.'); }
-                else if (m.type === 'peer_joined') { lanCount = 2; lanStatus('Teman masuk ke room ' + m.code + ' — 2/2 pemain! Tekan MULAI DUEL.'); }
-                else if (m.type === 'peer_left') { lanCount = 1; lanEndMovementTest(); lanStatus('Teman keluar dari room ' + m.code + '. Menunggu pemain — 1/2.'); }
-                else if (m.type === 'room_closed') { lanInRoom = false; lanRole = null; lanCount = 0; lanEndMovementTest(); lanStatus('Host menutup room.'); }
-                else if (m.type === 'left') { lanInRoom = false; lanRole = null; lanCount = 0; lanEndMovementTest(); lanStatus('Kamu keluar dari room.'); }
+                if (m.type === 'created') { lanRoomCode=m.code; lanInRoom=true; lanRole='host'; lanSlot=0; lanCapacity=m.capacity===4?4:lanHeroes.length;lanCount=m.count||1;lanFindHostIP();lanStatus('Kode room: '+m.code+' — '+lanCount+'/'+lanCapacity+' pemain. Berikan kode ini ke teman.'); }
+                else if (m.type === 'joined') { lanRoomCode=m.code;lanInRoom=true;lanRole='guest';lanSlot=Number.isInteger(m.slot)?m.slot:1;lanCapacity=m.capacity===4?4:lanHeroes.length;lanCount=m.count||lanHeroes.length;lanStatus('Berhasil masuk room '+m.code+' sebagai P'+(lanSlot+1)+' — '+lanCount+'/'+lanCapacity+' pemain. Tunggu host memulai.'); }
+                else if (m.type === 'peer_joined') { lanCount=m.count||lanCapacity;lanStatus('Pemain masuk ke room '+m.code+' — '+lanCount+'/'+lanCapacity+'. '+(lanCount===lanCapacity?'Room penuh; host dapat memulai.':'Menunggu pemain lain.')); }
+                else if (m.type === 'peer_left') { lanCount=Number.isFinite(m.count)?m.count:Math.max(1,lanCount-1);lanEndMovementTest();lanStatus('Pemain keluar dari room '+m.code+'. Menunggu pemain — '+lanCount+'/'+lanCapacity+'.'); }
+                else if (m.type === 'room_closed') { lanInRoom = false; lanRole = null; lanSlot=null;lanCount = 0; lanEndMovementTest(); lanStatus('Host menutup room.'); }
+                else if (m.type === 'left') { lanInRoom = false; lanRole = null; lanSlot=null;lanCount = 0; lanEndMovementTest(); lanStatus('Kamu keluar dari room.'); }
                 else if (m.type === 'test_started') lanBeginMovementTest(m);
                 else if (m.type === 'test_stopped') { lanEndMovementTest(); lanStatus('Duel selesai.'); }
                 else if (m.type === 'error') lanStatus(m.message || 'Terjadi kesalahan.');
@@ -10364,7 +10513,7 @@ var qrcode = function() {
             };
             s.onclose = () => {
                 if (lanSocket !== s) return;
-                lanSocket = null; lanInRoom = false; lanPending = false; lanRole = null; lanCount = 0; lanEndMovementTest();
+                lanSocket = null; lanInRoom = false; lanPending = false; lanRole = null; lanSlot=null;lanCount = 0; lanEndMovementTest();
                 lanStatus('Koneksi terputus. Periksa server dan coba lagi.'); lanButtons();
             };
             s.onerror = () => { if (lanSocket === s) lanStatus('Tidak bisa terhubung ke server '+(roomNetwork==='online'?'online.':'LAN.')); };
@@ -10599,7 +10748,7 @@ var qrcode = function() {
             const label=(e,i)=>{const name=String(e.name||'HERO'),short=name.length>13?name.slice(0,12)+'…':name;return 'P'+(i+1)+' '+short+' · '+(e instanceof Amat?'SH '+Math.ceil(e.shield):'HP '+Math.ceil(e.hp));};
             document.getElementById('lanHud1').textContent=label(lanFighters[0],0);
             document.getElementById('lanHud2').textContent=label(lanFighters[1],1);
-            const me=lanFighters[lanRole==='host'?0:1];
+            const me=lanFighters[lanLocalSlot()];
             const skill=document.getElementById('lanSkillLabel');
             if(typeof me.manualSkill1!=='function')skill.textContent='TIDAK ADA';
             else if(me instanceof BladeDancer)skill.textContent='ENERGI '+Math.floor(me.energy)+'%';
@@ -10621,7 +10770,7 @@ var qrcode = function() {
             base.addEventListener('pointerdown',ev=>{if(!lanMoveActive||pointer!==null)return;ev.preventDefault();pointer=ev.pointerId;base.setPointerCapture(pointer);update(ev);});
             base.addEventListener('pointermove',ev=>{if(ev.pointerId===pointer)update(ev);});
             base.addEventListener('pointerup',ev=>{if(ev.pointerId!==pointer)return;pointer=null;let angle;
-                if(Math.hypot(x,y)<5){const i=lanRole==='host'?0:1,me=lanFighters[i],foe=lanFighters[1-i];angle=foe.phantomVeil?Math.atan2(me.vy||0,me.vx||1):Math.atan2(foe.y-me.y,foe.x-me.x);}else angle=Math.atan2(y,x);
+                if(Math.hypot(x,y)<5){const i=lanLocalSlot(),me=lanFighters[i],foe=lanNearestOpponent(me);if(!me||!foe)return;angle=foe.phantomVeil?Math.atan2(me.vy||0,me.vx||1):Math.atan2(foe.y-me.y,foe.x-me.x);}else angle=Math.atan2(y,x);
                 knob.style.transform='translate(-50%,-50%)';lanAim={active:false,x:0,y:0};lanSendAction('skill',angle);});
             const cancel=ev=>{if(ev.pointerId===pointer){pointer=null;lanAim={active:false,x:0,y:0};knob.style.transform='translate(-50%,-50%)';}};
             base.addEventListener('pointercancel',cancel);base.addEventListener('lostpointercapture',cancel);
@@ -10648,6 +10797,7 @@ var qrcode = function() {
                 if ((!pr.wallPenetrate && mazeMode && pointInWall(pr.x, pr.y)) || segmentHitsFillerCone(previousX,previousY,pr.x-previousX,pr.y-previousY)) { projectiles.splice(i, 1); continue; }
 
                 let t = pr.target;
+                if(lanBossActive&&pr.kind==='bossShot'&&!t)t=lanFighters.find(e=>e&&e.hp>0&&Math.hypot(e.x-pr.x,e.y-pr.y)<e.radius+pr.r);
                 let hit = false;
                 if (t && t.hp > 0 && Math.hypot(t.x - pr.x, t.y - pr.y) < t.radius + pr.r) {
                     if(pr.kind==='expShot'&&pr.returning&&t===pr.owner){projectiles.splice(i,1);continue;}
@@ -10705,7 +10855,7 @@ var qrcode = function() {
                 if(pr.kind==='expShot'){drawExpansionShot(pr);continue;}
                 if(pr.kind==='parkingTicket'){drawParkingTicket(pr);continue;}
                 ctx.save();ctx.beginPath();ctx.arc(pr.x,pr.y,pr.r||8,0,Math.PI*2);
-                ctx.fillStyle=pr.kind==='orb'?'#3b82f6':pr.kind==='gravity'?'#a855f7':pr.kind==='vexen'?'#67e8f9':pr.kind==='glooSlime'?'#4ade80':'#fff';
+                ctx.fillStyle=pr.kind==='bossShot'?(pr.color||'#ef4444'):pr.kind==='orb'?'#3b82f6':pr.kind==='gravity'?'#a855f7':pr.kind==='vexen'?'#67e8f9':pr.kind==='glooSlime'?'#4ade80':'#fff';
                 ctx.fill();ctx.lineWidth=3;ctx.strokeStyle='#111';ctx.stroke();
                 if(pr.kind==='number'){ctx.fillStyle='#111';ctx.font='bold 12px sans-serif';ctx.textAlign='center';ctx.fillText(pr.dmg,pr.x,pr.y+4);}
                 ctx.restore();
@@ -10769,7 +10919,7 @@ var qrcode = function() {
             ctx.fillStyle='rgba(15,23,42,.28)';for(const w of lanArenaWalls)ctx.fillRect(w.x+4,w.y+5,w.w,w.h);
             for(const w of lanArenaWalls){ctx.fillStyle='#1f2937';ctx.fillRect(w.x,w.y,w.w,w.h);ctx.fillStyle='#374151';ctx.fillRect(w.x+4,w.y+4,w.w-8,w.h-8);ctx.fillStyle='#4b5563';ctx.fillRect(w.x+4,w.y+4,w.w-8,5);}
             ctx.strokeStyle='#1f2937';ctx.lineWidth=6;ctx.strokeRect(0,0,900,900);
-            const me=lanFighters[lanRole==='host'?0:1];
+            const me=lanFighters[lanLocalSlot()];
             if(me && typeof me.manualSkill1==='function')drawAimPreview(me,lanAim);
             // Render hero asli; lingkaran luar membedakan pemain.
             for(let i=0;i<2;i++){
@@ -10830,6 +10980,575 @@ var qrcode = function() {
             function end(ev){if(ev.pointerId!==lanPointer)return;lanPointer=null;lanMoveInput={x:0,y:0};knob.style.transform='translate(-50%,-50%)';if(lanRole==='guest')lanSendRaw(lanInputMessage(0,0));}
             base.addEventListener('pointerup',end);base.addEventListener('pointercancel',end);base.addEventListener('lostpointercapture',end);
         })();
+
+// ===== BALL FIGHT COMBAT+ : passive, revamp, melee telegraph, power-up =====
+const PLUS_PASSIVE_SUFFIX=['Living Core','Battle Rhythm','Hidden Engine','Wild Instinct','Echo Force','Second Wind','Lucky Circuit','Bright Spark','Iron Tempo','Silent Current','Nova Reaction','Prime Guard','Quickening','Ancient Code','Rising Pulse','Trick Protocol','Spirit Link','Last Reserve','Hunter Focus','Momentum'];
+const PLUS_ARCHETYPES={
+ MM:[
+  {trigger:'hit',effect:'mark',every:3,cooldown:5200},{trigger:'skill',effect:'charge',cooldown:6000},
+  {trigger:'periodic',effect:'zone',period:7600,cooldown:1000},{trigger:'move',effect:'thermal',distance:680,cooldown:7000},
+  {trigger:'lowHp',effect:'overcharge',cooldown:12000},{trigger:'kill',effect:'cooldown',cooldown:5000}
+ ],
+ Fighter:[
+  {trigger:'hit',effect:'shield',every:3,cooldown:6500},{trigger:'skill',effect:'blast',cooldown:6200},
+  {trigger:'lowHp',effect:'defense',cooldown:12000},{trigger:'damaged',effect:'heal',cooldown:8500},
+  {trigger:'periodic',effect:'attackSpeed',period:8200,cooldown:1000},{trigger:'powerup',effect:'reflect',cooldown:5000}
+ ],
+ Assassin:[
+  {trigger:'move',effect:'charge',distance:620,cooldown:6200},{trigger:'hit',effect:'vuln',every:3,cooldown:6500},
+  {trigger:'skill',effect:'blink',cooldown:6500},{trigger:'kill',effect:'haste',cooldown:5000},
+  {trigger:'lowHp',effect:'cleanse',cooldown:12000},{trigger:'periodic',effect:'lifesteal',period:8000,cooldown:1000}
+ ],
+ Tank:[
+  {trigger:'damaged',effect:'shield',cooldown:7200},{trigger:'skill',effect:'push',cooldown:6500},
+  {trigger:'lowHp',effect:'invuln',cooldown:14000},{trigger:'periodic',effect:'defense',period:8500,cooldown:1000},
+  {trigger:'hit',effect:'pull',every:4,cooldown:7000},{trigger:'powerup',effect:'heal',cooldown:4000}
+ ],
+ Mage:[
+  {trigger:'skill',effect:'cooldown',cooldown:7000},{trigger:'hit',effect:'charge',every:3,cooldown:5600},
+  {trigger:'periodic',effect:'zone',period:7400,cooldown:1000},{trigger:'lowHp',effect:'ccImmune',cooldown:12000},
+  {trigger:'powerup',effect:'minion',cooldown:6500},{trigger:'ult',effect:'shield',cooldown:5000}
+ ]
+};
+function plusPassiveDescription(p){
+ const trig={hit:`Setiap ${p.every||1} hit`,skill:'Setelah Skill 1',ult:'Setelah Ultimate',move:`Setelah bergerak ${p.distance||600} unit`,lowHp:'Saat HP di bawah 40%',periodic:`Tiap ${(p.period||8000)/1000} dtk`,damaged:'Setelah menerima damage',kill:'Setelah eliminasi',powerup:'Setelah mengambil power-up'}[p.trigger]||'Saat kondisi pasif aktif';
+ const v=p.value,d=p.duration/1000;
+ const effect={shield:`+${v} shield`,heal:`pulih ${v}% HP maks`,haste:`haste ${d} dtk`,charge:`+${v}% gauge ult`,cooldown:`cooldown skill -${v/1000} dtk`,mark:'target mendapat 1 Pin',burn:'membakar target',vuln:`armor break ${d} dtk`,blast:`+${v} damage`,zone:'membuat zona kecil',minion:'memanggil 1 minion',reflect:`reflect ${d} dtk`,defense:`damage masuk -25% selama ${d} dtk`,cleanse:'membersihkan CC dan memberi shield kecil',blink:'melompat ke depan',pull:'menarik target',push:'mendorong target',lifesteal:`lifesteal ${d} dtk`,invuln:'kebal singkat',overcharge:'basic berikutnya 2x',thermal:`tembus dinding ${d} dtk`,attackSpeed:`serangan lebih cepat ${d} dtk`,ccImmune:`imun CC ${d} dtk`}[p.effect]||'efek khusus';
+ return `${trig}: ${effect}. CD pasif ${p.cooldown/1000} dtk.`;
+}
+function plusBuildPassive(d){
+ const roles=['MM','Fighter','Assassin','Tank','Mage'],list=PLUS_ARCHETYPES[d.role]||PLUS_ARCHETYPES.Fighter;
+ const base=list[(d.number+roles.indexOf(d.role)*2)%list.length],n=d.number;
+ const p=Object.assign({every:1,duration:2000,value:1},base,{id:d.id,heroId:d.id});
+ p.cooldown=(base.cooldown||6000)+(n%3)*500;
+ p.duration=base.duration||(['lowHp','damaged'].includes(p.trigger)?1800:2200)+(n%2)*300;
+ const defaults={shield:25+(n%4)*10,heal:4+(n%3)*2,haste:35,charge:5+(n%4)*2,cooldown:1000+(n%3)*250,blast:4+(n%3)*2};
+ p.value=defaults[p.effect]||p.value;
+ p.name=`${d.name} · ${PLUS_PASSIVE_SUFFIX[(n*7)%PLUS_PASSIVE_SUFFIX.length]}`;
+ p.desc=plusPassiveDescription(p);return p;
+}
+for(const d of EXPANSION_HERO_DATA){d.passive=plusBuildPassive(d);const c=CHARACTERS.find(x=>x.id===d.id);if(c)c.passive=d.passive;}
+
+function plusInitHero(e){
+ if(!e||!e.expansionId)return null;
+ const d=EXPANSION_BY_ID.get(e.expansionId);if(!d||!d.passive)return null;
+ if(!e.plusPassive)e.plusPassive=d.passive;
+ if(!e.plusState)e.plusState={cd:0,hits:0,move:0,lastX:e.x,lastY:e.y,periodic:d.passive.period||8000,lowUsed:false};
+ return e.plusPassive;
+}
+function plusFx(e,text,color='#fde047'){
+ if(!e)return;if(typeof e.addFx==='function')e.addFx({kind:'ring',x:e.x,y:e.y,r:e.radius+22,time:420,maxTime:420,color});
+ createFloatingText(e.x,e.y-e.radius-42,String(text||'PASIF').slice(0,24).toUpperCase(),color);
+}
+function plusApplyPassive(e,p,target){
+ if(!e||!p||e.hp<=0)return false;
+ const needsTarget=['mark','burn','vuln','blast','pull','push'].includes(p.effect);if(needsTarget&&(!target||target.hp<=0))return false;
+ const d=p.duration,v=p.value;
+ switch(p.effect){
+  case 'shield':e.expShield=(e.expShield||0)+v;break;
+  case 'heal':if(typeof e.heal==='function')e.heal(e.maxHp*v/100);else e.hp=Math.min(e.maxHp,e.hp+e.maxHp*v/100);break;
+  case 'haste':e.powerHasteTimer=Math.max(e.powerHasteTimer||0,d);break;
+  case 'charge':e.ultCharge=Math.min(100,(e.ultCharge||0)+v);break;
+  case 'cooldown':e.manualCd1=Math.max(0,(e.manualCd1||0)-v);e.manualCd2=Math.max(0,(e.manualCd2||0)-v);break;
+  case 'mark':target.expMarks=Math.min(5,(target.expMarks||0)+1);target.expMarkTimer=6000;break;
+  case 'burn':applyExpansionEffect(e,target,'burn',D(e.expansionId,'basic')*.4,2);break;
+  case 'vuln':target.expArmorBreakTimer=Math.max(target.expArmorBreakTimer||0,d);break;
+  case 'blast':target.takeDamage(v,true);break;
+  case 'zone':if(typeof e.addZone==='function')e.addZone({x:e.x,y:e.y,r:75,time:2200,pulse:250,interval:700,damage:Math.max(2,D(e.expansionId,'basic')*.18),effect:'',color:e.def.color});break;
+  case 'minion':if(typeof e.spawnMinions==='function')e.spawnMinions(1,3500,Math.max(3,D(e.expansionId,'basic')*.25),'skill');break;
+  case 'reflect':e.expReflectTimer=Math.max(e.expReflectTimer||0,d);e.expReflectPercent=.4;break;
+  case 'defense':e.expDefenseTimer=Math.max(e.expDefenseTimer||0,d);e.expDefenseFactor=.75;break;
+  case 'cleanse':for(const k of ['stunTimer','expRootTimer','expConfuseTimer','expSilenceTimer','expCharmTimer','expBlindTimer'])e[k]=0;e.expShield=(e.expShield||0)+20;break;
+  case 'blink':{const a=e.aimAngle||0,pnt=clampInside(e.x+Math.cos(a)*75,e.y+Math.sin(a)*75,e.radius);e.x=pnt.x;e.y=pnt.y;break;}
+  case 'pull':case 'push':applyExpansionEffect(e,target,p.effect,0,.5);break;
+  case 'lifesteal':e.expLifestealTimer=Math.max(e.expLifestealTimer||0,d);break;
+  case 'invuln':e.expInvulnTimer=Math.max(e.expInvulnTimer||0,450);break;
+  case 'overcharge':e.expOvercharge=true;break;
+  case 'thermal':e.expThermalTimer=Math.max(e.expThermalTimer||0,d);break;
+  case 'attackSpeed':e.expAttackSpeedTimer=Math.max(e.expAttackSpeedTimer||0,d);break;
+  case 'ccImmune':e.expCcImmuneTimer=Math.max(e.expCcImmuneTimer||0,d);break;
+  default:return false;
+ }
+ plusFx(e,p.name.split('·')[1]||p.name);return true;
+}
+function plusTrigger(e,trigger,target){
+ const p=plusInitHero(e);if(!p||p.trigger!==trigger||!e.plusState||e.plusState.cd>0)return false;
+ if(!plusApplyPassive(e,p,target))return false;e.plusState.cd=p.cooldown;return true;
+}
+function plusRegisterHit(e,target,dealt){
+ const p=plusInitHero(e);if(!p||!e.plusState||!(dealt>0))return;
+ e.plusState.hits++;
+ if(p.trigger==='hit'&&e.plusState.hits%(p.every||1)===0)plusTrigger(e,'hit',target);
+ if(target&&target.hp<=0)plusTrigger(e,'kill',target);
+}
+function plusTickHero(e,dt){
+ const p=plusInitHero(e);if(!p||!e.plusState)return;const s=e.plusState;s.cd=Math.max(0,s.cd-dt);
+ if(e.hp<=0){e.meleeTelegraph=null;return;}
+ const moved=Math.hypot(e.x-s.lastX,e.y-s.lastY);s.lastX=e.x;s.lastY=e.y;
+ if(p.trigger==='move'){s.move+=moved;if(s.move>=(p.distance||600)){s.move=0;plusTrigger(e,'move',null);}}
+ if(p.trigger==='periodic'){s.periodic-=dt;if(s.periodic<=0){s.periodic=p.period||8000;plusTrigger(e,'periodic',e.target());}}
+ if(p.trigger==='lowHp'){
+  const frac=e.hp/(e.maxHp||e.hp);if(frac<.4&&!s.lowUsed){if(plusTrigger(e,'lowHp',null))s.lowUsed=true;}if(frac>.55)s.lowUsed=false;
+ }
+}
+
+// Revamp kit generik tanpa menghapus skill aslinya.
+function plusRevampDamage(e,ratio){return Math.max(3,D(e.expansionId,'basic')*ratio);}
+const PLUS_REVAMPS={
+ OrbitalRay:{text:'Target juga terkena armor break.',apply(e,t){if(t)t.expArmorBreakTimer=Math.max(t.expArmorBreakTimer||0,2500);}},
+ PhotonCannon:{text:'Basic berikutnya menjadi tiga proyektil.',apply(e){e.revampSplitShots=1;}},
+ PlasmaSniper:{text:'Aktivasi mengirim garis deteksi ke semua musuh.',apply(e){for(const t of e.opponents())e.addFx({kind:'line',x:e.x,y:e.y,x2:t.x,y2:t.y,time:450,maxTime:450,color:'#67e8f9'});}},
+ TitanShield:{text:'Aktivasi mendorong musuh di sekitar.',apply(e){for(const t of e.opponents())if(Math.hypot(t.x-e.x,t.y-e.y)<170)applyExpansionEffect(e,t,'push',0,.5);}},
+ CounterDuelist:{text:'Parry juga memberi 60 shield.',apply(e){e.expShield=(e.expShield||0)+60;}},
+ ImpactHammer:{text:'Ground Pound meninggalkan tiga zona retakan.',apply(e,t){const c=t||e;for(let i=0;i<3;i++)e.addZone({x:c.x+Math.cos(i*2.094)*65,y:c.y+Math.sin(i*2.094)*65,r:55,time:1800,pulse:300,interval:600,damage:plusRevampDamage(e,.30),effect:'',color:e.def.color});}},
+ SpikeHedgehog:{text:'Aktivasi memunculkan aura duri singkat.',apply(e){e.addZone({x:e.x,y:e.y,r:85,time:1800,pulse:200,interval:600,damage:plusRevampDamage(e,.35),effect:'',follow:true,color:e.def.color});}},
+ MonkStaff:{text:'Putaran pertahanan mempercepat basic.',apply(e){e.expAttackSpeedTimer=1800;}},
+ BouncerTrampoline:{text:'Wall Bounce kini bergerak ke depan.',apply(e){e.startExpDash(e.aimAngle||0,0,'',false);}},
+ RiderCharger:{text:'Turbo Charge meninggalkan jalur api.',apply(e){e.expTrailTimer=1800;e.expTrailClock=0;}},
+ GaleAssassin:{text:'Wind Step meninggalkan pusaran pemotong.',apply(e){e.addZone({x:e.x,y:e.y,r:70,time:1700,pulse:250,interval:550,damage:plusRevampDamage(e,.30),effect:'slow',color:e.def.color});}},
+ BumperPinball:{text:'Bumper Shield memantul ke arah bidikan.',apply(e){e.startExpDash(e.aimAngle||0,0,'push',false);}},
+ ReflectorShield:{text:'Mirror Guard memberi lapisan 40 shield.',apply(e){e.expShield=(e.expShield||0)+40;}},
+ SandwormBurrower:{text:'Burrow memindahkan posisi dan meninggalkan erupsi.',apply(e,t){if(t){const a=Math.atan2(e.y-t.y,e.x-t.x),p=clampInside(t.x+Math.cos(a)*70,t.y+Math.sin(a)*70,e.radius);e.x=p.x;e.y=p.y;}e.addZone({x:e.x,y:e.y,r:85,time:1400,pulse:400,interval:600,damage:plusRevampDamage(e,.35),effect:'push',color:e.def.color});}},
+ CosmicSupernova:{text:'Starlight Pulse membentuk empat orbit nova.',apply(e){for(let i=0;i<4;i++)e.addZone({x:e.x+Math.cos(i*Math.PI/2)*95,y:e.y+Math.sin(i*Math.PI/2)*95,r:50,time:2000,pulse:350,interval:650,damage:plusRevampDamage(e,.28),effect:'',color:e.def.color});}}
+};
+for(const [id,r] of Object.entries(PLUS_REVAMPS)){const d=EXPANSION_BY_ID.get(id),c=CHARACTERS.find(x=>x.id===id);if(d)d.skill+=` ${r.text}`;if(c)c.skill=d?d.skill:c.skill;}
+
+const plusTakeDamage=ExpansionHero.prototype.takeDamage;
+ExpansionHero.prototype.takeDamage=function(amount,pierceIFrames=false){const dealt=plusTakeDamage.call(this,amount,pierceIFrames);if(dealt>0){plusInitHero(this);plusTrigger(this,'damaged',this.expLastAttacker||null);}return dealt;};
+const plusDealDamage=ExpansionHero.prototype.dealDamage;
+ExpansionHero.prototype.dealDamage=function(target,amount,effect='',options={}){const dealt=plusDealDamage.call(this,target,amount,effect,options);plusRegisterHit(this,target,dealt);return dealt;};
+const plusShotHit=ExpansionHero.prototype.onExpansionShotHit;
+ExpansionHero.prototype.onExpansionShotHit=function(target,pr,dealt){plusShotHit.call(this,target,pr,dealt);plusRegisterHit(this,target,dealt);};
+const plusCastSkill=ExpansionHero.prototype.castSkill;
+ExpansionHero.prototype.castSkill=function(enemy,angle){plusCastSkill.call(this,enemy,angle);const r=PLUS_REVAMPS[this.expansionId];if(r)r.apply(this,enemy);plusTrigger(this,'skill',enemy);};
+const plusStartUlt=ExpansionHero.prototype.startUlt;
+ExpansionHero.prototype.startUlt=function(enemy){const was=this.isUltMode;plusStartUlt.call(this,enemy);if(!was&&this.isUltMode)plusTrigger(this,'ult',enemy);};
+const plusFireShot=ExpansionHero.prototype.fireShot;
+ExpansionHero.prototype.fireShot=function(target,angle,damage,effect='',options={}){
+ plusFireShot.call(this,target,angle,damage,effect,options);
+ if(this.revampSplitShots>0&&options.slot==='basic'){
+  this.revampSplitShots--;plusFireShot.call(this,target,angle-.2,damage,effect,Object.assign({},options,{homing:false}));plusFireShot.call(this,target,angle+.2,damage,effect,Object.assign({},options,{homing:false}));
+ }
+};
+
+// Basic melee memiliki wind-up nyata: damage hanya terjadi saat telegraph selesai.
+function plusTickMelee(e,dt){
+ const t=e.meleeTelegraph;if(!t)return;t.time-=dt;
+ if(t.time>0)return; e.meleeTelegraph=null;const enemy=t.target;
+ if(!enemy||enemy.hp<=0||e.hp<=0)return;
+ const range=e.radius+enemy.radius+(t.range||72)+24,dist=Math.hypot(enemy.x-e.x,enemy.y-e.y);if(dist>range)return;
+ const a=Math.atan2(enemy.y-e.y,enemy.x-e.x),diff=Math.atan2(Math.sin(a-t.angle),Math.cos(a-t.angle));if(Math.abs(diff)>.82)return;
+ e.addFx({kind:'slash',x:enemy.x,y:enemy.y,angle:t.angle+(e.leftSlash?.65:-.65),time:180,maxTime:180,color:e.def.color});
+ e.dealDamage(enemy,t.damage,t.effect,{duration:1.5});playExpansionSfx(e,'basic');
+}
+const plusBasicAttack=ExpansionHero.prototype.basicAttack;
+ExpansionHero.prototype.basicAttack=function(enemy){
+ const cfg=this.def.basicConfig;if(cfg.kind!=='melee')return plusBasicAttack.call(this,enemy);
+ if(!enemy||!canLockTarget(enemy)||this.meleeTelegraph)return;
+ if(mazeMode&&!hasLineOfSight(this.x,this.y,enemy.x,enemy.y)&&!cfg.wallPenetrate&&!(this.expThermalTimer>0))return;
+ const dist=Math.hypot(enemy.x-this.x,enemy.y-this.y);if(dist>this.radius+enemy.radius+72)return;
+ let damage=D(this.expansionId,'basic');if(this.expOvercharge){damage*=2;this.expOvercharge=false;createFloatingText(this.x,this.y-this.radius-25,'OVERCHARGE','#fde047');}
+ this.leftSlash=!this.leftSlash;this.attackAngle=Math.atan2(enemy.y-this.y,enemy.x-this.x);
+ const speedFactor=this.expAttackSpeedTimer>0?.5:1,windup=this.expAttackSpeedTimer>0?120:180;
+ this.meleeTelegraph={target:enemy,time:windup,maxTime:windup,angle:this.attackAngle,range:72,damage,effect:cfg.effect||''};
+ this.attackTimer=this.def.basicCooldown*speedFactor;
+};
+const plusExpUpdate=ExpansionHero.prototype.update;
+ExpansionHero.prototype.update=function(dt,enemy){
+ plusTickMelee(this,dt);
+ if(this.expTrailTimer>0){this.expTrailTimer=Math.max(0,this.expTrailTimer-dt);this.expTrailClock=(this.expTrailClock||0)-dt;if(this.expTrailClock<=0){this.expTrailClock=240;this.addZone({x:this.x,y:this.y,r:38,time:900,pulse:100,interval:450,damage:plusRevampDamage(this,.18),effect:'burn',color:'#fb923c'});}}
+ plusExpUpdate.call(this,dt,enemy);
+};
+const plusExpDraw=ExpansionHero.prototype.draw;
+ExpansionHero.prototype.draw=function(){
+ plusExpDraw.call(this);const t=this.meleeTelegraph;if(!t)return;
+ const progress=1-Math.max(0,t.time)/(t.maxTime||180),r=this.radius+(t.range||72);
+ ctx.save();ctx.globalAlpha=.18+.28*progress;ctx.fillStyle=progress>.72?'#ef4444':this.def.color;ctx.strokeStyle='#7f1d1d';ctx.lineWidth=3;
+ ctx.beginPath();ctx.moveTo(this.x,this.y);ctx.arc(this.x,this.y,r,t.angle-.72,t.angle+.72);ctx.closePath();ctx.fill();ctx.globalAlpha=.95;ctx.beginPath();ctx.arc(this.x,this.y,r,t.angle-.72,t.angle+.72);ctx.stroke();
+ ctx.fillStyle='#991b1b';ctx.font='bold 18px system-ui';ctx.textAlign='center';ctx.fillText('!',this.x,this.y-this.radius-25);ctx.restore();
+};
+
+// Power-up berkala untuk Arena bot dan online (host yang menghitung).
+const PLUS_POWERUP_TYPES={
+ heal:{icon:'+',label:'HEAL',color:'#22c55e'},shield:{icon:'◆',label:'SHIELD',color:'#38bdf8'},haste:{icon:'»',label:'HASTE',color:'#facc15'},
+ cooldown:{icon:'↻',label:'COOLDOWN',color:'#c084fc'},ult:{icon:'★',label:'ULTIMATE',color:'#fb7185'},blast:{icon:'!',label:'BLAST',color:'#f97316'}
+};
+let plusDrops=[],plusBlasts=[],plusPowerupsEnabled=false,plusSpawnClock=3500,plusDropId=0;
+function resetPowerupSystem(enabled=false){plusDrops=[];plusBlasts=[];plusPowerupsEnabled=!!enabled;plusSpawnClock=3000;plusDropId=0;}
+function plusPowerupPoint(){
+ const b=getArenaBounds();for(let i=0;i<45;i++){const x=b.left+45+Math.random()*Math.max(1,b.right-b.left-90),y=b.top+45+Math.random()*Math.max(1,b.bottom-b.top-90);if(mazeMode&&typeof circleHitsWall==='function'&&circleHitsWall(x,y,28))continue;return{x,y};}return{x:(b.left+b.right)/2,y:(b.top+b.bottom)/2};
+}
+function spawnPowerupDrop(type,x,y){if(plusDrops.length>=3)return null;const keys=Object.keys(PLUS_POWERUP_TYPES),kind=PLUS_POWERUP_TYPES[type]?type:keys[Math.floor(Math.random()*keys.length)],pt=Number.isFinite(x)&&Number.isFinite(y)?{x,y}:plusPowerupPoint();const p={id:++plusDropId,type:kind,x:pt.x,y:pt.y,age:0,life:17000};plusDrops.push(p);return p;}
+function plusApplyPowerup(e,type){
+ if(!e||e.hp<=0)return;
+ if(type==='heal')e.hp=Math.min(e.maxHp||e.hp,e.hp+(e.maxHp||e.hp)*.3);
+ else if(type==='shield')e.expShield=(e.expShield||0)+120;
+ else if(type==='haste')e.powerHasteTimer=8000;
+ else if(type==='cooldown'){for(const k of ['manualCd1','manualCd2','dashTimer','skillTimer','elytraTimer','passTimer','orbitalTimer','phiTimer','hookCooldown','shadowCooldown','maceCd'])if(Number.isFinite(e[k]))e[k]=0;if(Number.isFinite(e.attackTimer))e.attackTimer=Math.min(e.attackTimer,150);}
+ else if(type==='ult'){if(e instanceof Mathemathing)e.phiCasts=Math.min(3,(e.phiCasts||0)+1);else e.ultCharge=Math.min(100,(e.ultCharge||0)+35);}
+ else if(type==='blast')plusBlasts.push({x:e.x,y:e.y,r:175,time:550,maxTime:550,damage:35,owner:e,teamId:e.teamId||0});
+ createFloatingText(e.x,e.y-e.radius-38,PLUS_POWERUP_TYPES[type].label,PLUS_POWERUP_TYPES[type].color);plusTrigger(e,'powerup',null);
+}
+function plusTickPowerupBuffs(e,dt){if(e&&e.powerHasteTimer>0)e.powerHasteTimer=Math.max(0,e.powerHasteTimer-dt);}
+function tickPowerupSystem(dt,fighters){
+ if(!plusPowerupsEnabled)return;plusSpawnClock-=dt;
+ if(plusSpawnClock<=0){if(plusDrops.length<3)spawnPowerupDrop();plusSpawnClock=7500+Math.random()*3500;}
+ // BLAST lama dihitung lebih dulu; BLAST yang baru diambil mulai penuh pada frame berikutnya.
+ for(let i=plusBlasts.length-1;i>=0;i--){const b=plusBlasts[i];b.time-=dt;
+  if(b.time<=0){const targets=(typeof lanBossActive!=='undefined'&&lanBossActive&&lanBossState)?fighters.concat(lanBossState.entity):fighters;for(const e of targets){if(e.hp<=0||e===b.owner)continue;if(b.owner?!isOpponent(b.owner,e):(isTeamMode&&b.teamId===e.teamId))continue;if(Math.hypot(e.x-b.x,e.y-b.y)<b.r+e.radius)e.takeDamage(b.damage,true);}plusBlasts.splice(i,1);}
+ }
+ for(let i=plusDrops.length-1;i>=0;i--){const p=plusDrops[i];p.age+=dt;p.life-=dt;
+  if(p.age>=800){const t=fighters.find(e=>e.hp>0&&Math.hypot(e.x-p.x,e.y-p.y)<e.radius+24);if(t){plusApplyPowerup(t,p.type);plusDrops.splice(i,1);continue;}}
+  if(p.life<=0)plusDrops.splice(i,1);
+ }
+}
+function drawPowerupDrops(){
+ for(const p of plusDrops){const def=PLUS_POWERUP_TYPES[p.type]||PLUS_POWERUP_TYPES.heal,fall=Math.max(0,1-p.age/800),y=p.y-fall*240;
+  ctx.save();ctx.globalAlpha=.25*(1-fall);ctx.fillStyle='#111';ctx.beginPath();ctx.ellipse(p.x,p.y,25+fall*20,12+fall*8,0,0,Math.PI*2);ctx.fill();ctx.globalAlpha=1;
+  ctx.strokeStyle=def.color;ctx.lineWidth=3;ctx.beginPath();ctx.arc(p.x,p.y,29,0,Math.PI*2);ctx.stroke();ctx.fillStyle=def.color;ctx.beginPath();ctx.arc(p.x,y,19,0,Math.PI*2);ctx.fill();ctx.strokeStyle='#111';ctx.stroke();
+  ctx.fillStyle='#111';ctx.font='bold 18px system-ui';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(def.icon,p.x,y+1);ctx.font='bold 10px system-ui';ctx.fillText(def.label,p.x,p.y+39);ctx.restore();
+ }
+ for(const b of plusBlasts){const f=Math.max(0,b.time/(b.maxTime||550));ctx.save();ctx.globalAlpha=.18+.35*(1-f);ctx.fillStyle='#f97316';ctx.strokeStyle='#991b1b';ctx.lineWidth=5;ctx.beginPath();ctx.arc(b.x,b.y,b.r,0,Math.PI*2);ctx.fill();ctx.stroke();ctx.globalAlpha=1;ctx.fillStyle='#7f1d1d';ctx.font='bold 17px system-ui';ctx.textAlign='center';ctx.fillText('BLAST '+Math.ceil(b.time/100)/10+'s',b.x,b.y);ctx.restore();}
+ for(const e of gamePlayers){if(!e||e.hp<=0)continue;const labels=[];if(e.powerHasteTimer>0)labels.push('HASTE '+Math.ceil(e.powerHasteTimer/1000)+'s');if(e.expShield>0)labels.push('SHIELD '+Math.ceil(e.expShield));if(!labels.length)continue;const text=labels.join(' · ');ctx.save();ctx.font='bold 10px system-ui';ctx.textAlign='center';ctx.lineWidth=3;ctx.strokeStyle='#111';ctx.fillStyle='#fef08a';ctx.strokeText(text,e.x,e.y-e.radius-52);ctx.fillText(text,e.x,e.y-e.radius-52);ctx.restore();}
+}
+
+const plusTickStatus=tickExpansionStatus;
+tickExpansionStatus=function(e,dt){plusTickStatus(e,dt);plusTickPowerupBuffs(e,dt);if(e instanceof ExpansionHero)plusTickHero(e,dt);};
+const plusFighterSpeed=fighterSpeed;
+fighterSpeed=function(e){return plusFighterSpeed(e)*(e&&e.powerHasteTimer>0?1.35:1);};
+const plusStartGame=startGame;
+startGame=function(){plusStartGame();resetPowerupSystem(mazeMode&&!duelMode);};
+const plusBackLobby=backToLobby;
+backToLobby=function(){resetPowerupSystem(false);plusBackLobby();};
+const plusGameLoop=gameLoop;let plusLocalFrame=0;
+gameLoop=function(timestamp){
+ const dt=plusLocalFrame?Math.min(50,Math.max(0,timestamp-plusLocalFrame)):16;plusLocalFrame=timestamp;
+ if(isGameActive&&plusPowerupsEnabled)tickPowerupSystem(dt,gamePlayers);
+ plusGameLoop(timestamp);
+ drawPowerupDrops();
+};
+const plusRenderDetail=renderDetail;
+renderDetail=function(){plusRenderDetail();const c=CHARACTERS.find(x=>x.id===inspectedId),box=document.getElementById('detailBox');if(!c||!c.passive||!box)return;const d=document.createElement('div');d.className='text-[10px] leading-snug plus-passive';d.innerHTML=`<span class="inline-block px-1 mr-1 border-2 border-black bg-yellow-200 font-bold">PASIF</span><b>${c.passive.name}</b> — ${c.passive.desc}`;box.insertBefore(d,box.lastElementChild);};
+const plusLanPicker=renderLanHeroPicker;
+renderLanHeroPicker=function(){plusLanPicker();const c=CHARACTERS.find(x=>x.id===lanPickerSelected),box=document.getElementById('lanHeroDetail');if(c&&c.passive&&box)box.insertAdjacentHTML('beforeend',`<div class="plus-passive"><b>PASIF — ${c.passive.name}:</b> ${c.passive.desc}</div>`);};
+renderDetail();renderLanHeroPicker();
+
+
+// ===== BALL FIGHT COIN & HERO UNLOCKS =====
+// Ekonomi lokal: menang ranked 1v1 pantul +10 koin. Kalah/seri tidak mendapat koin.
+const COIN_STORAGE_KEY='ballFightCoinUnlockV1';
+const COIN_RANK_WIN=10;
+const COIN_LOCK_PRICES={};
+for(const role of Object.keys(HERO_CATEGORIES)){
+ const expansion=HERO_CATEGORIES[role].filter(id=>EXPANSION_BY_ID.has(id));
+ expansion.slice(-4).forEach((id,i)=>{COIN_LOCK_PRICES[id]=[300,450,600,750][i];});
+}
+let coinState={coins:0,unlocked:new Set(),loaded:false},coinLastMessage='Menang rank untuk mendapatkan koin.';
+function loadCoinState(){
+ if(coinState.loaded)return;coinState.loaded=true;
+ try{const raw=JSON.parse(localStorage.getItem(COIN_STORAGE_KEY)||'{}');coinState.coins=Number.isFinite(raw.coins)?Math.max(0,Math.min(999999999,Math.floor(raw.coins))):0;coinState.unlocked=new Set((Array.isArray(raw.unlocked)?raw.unlocked:[]).filter(id=>COIN_LOCK_PRICES[id]));}catch(_){coinState.coins=0;coinState.unlocked=new Set();}
+}
+function saveCoinState(){loadCoinState();try{localStorage.setItem(COIN_STORAGE_KEY,JSON.stringify({coins:coinState.coins,unlocked:[...coinState.unlocked].sort()}));return true;}catch(_){return false;}}
+function coinBalance(){loadCoinState();return coinState.coins;}
+function isHeroLocked(id){loadCoinState();return !!COIN_LOCK_PRICES[id]&&!coinState.unlocked.has(id);}
+function isHeroPurchased(id){loadCoinState();return !!COIN_LOCK_PRICES[id]&&coinState.unlocked.has(id);}
+function coinSetMessage(text){coinLastMessage=String(text||'');document.querySelectorAll('.coin-status-text').forEach(el=>{el.textContent=coinLastMessage;});}
+function coinRefreshWallet(){document.querySelectorAll('[data-coin-balance]').forEach(el=>{el.textContent=coinBalance();});}
+function coinRefreshBadges(){
+ for(const b of document.querySelectorAll('#avatarRow>button[data-id],#heroGrid>button[data-id]')){
+  const id=b.dataset.id;if(!CHARACTERS.some(c=>c.id===id))continue;let badge=b.querySelector('.coin-lock-badge');
+  if(isHeroLocked(id)){if(!badge){badge=document.createElement('span');badge.className='coin-lock-badge';b.appendChild(badge);}badge.textContent='🔒 '+COIN_LOCK_PRICES[id];b.classList.add('coin-locked');b.style.position='relative';b.title='Hero terkunci · '+COIN_LOCK_PRICES[id]+' koin';}
+  else{if(badge)badge.remove();b.classList.remove('coin-locked');if(b.title.startsWith('Hero terkunci'))b.removeAttribute('title');}
+ }
+ // Daftar online tidak diberi badge/kunci selama masa testing.
+}
+function coinActionHTML(id){
+ const price=COIN_LOCK_PRICES[id];if(!price)return '';
+ if(isHeroPurchased(id))return '<div class="coin-hero-action is-owned">✓ HERO SUDAH DIBUKA PERMANEN</div>';
+ return `<div class="coin-hero-action"><div><b>🔒 HERO TERKUNCI</b><span>Harga ${price} koin · Saldo <b data-coin-balance>${coinBalance()}</b></span></div><button type="button" onclick="buyHero('${id}')">BUKA · ${price} KOIN</button><div class="coin-status-text"></div></div>`;
+}
+function buyHero(id){
+ const price=COIN_LOCK_PRICES[id];loadCoinState();if(!price)return false;
+ if(coinState.unlocked.has(id)){coinSetMessage('Hero ini sudah terbuka.');return true;}
+ if(coinState.coins<price){coinSetMessage(`Koin kurang ${price-coinState.coins}. Menang rank untuk mendapatkan +${COIN_RANK_WIN} koin.`);coinRefreshWallet();return false;}
+ coinState.coins-=price;coinState.unlocked.add(id);const stored=saveCoinState();
+ coinSetMessage(stored?'Hero berhasil dibuka dan tersimpan permanen!':'Hero terbuka di sesi ini, tetapi penyimpanan browser tidak tersedia.');
+ coinRefreshWallet();coinRefreshBadges();renderDetail();refreshHeroOverlay();refreshPicker();return true;
+}
+// Wallet dibuat dari modul agar paket lama mudah diperbarui tanpa mengubah struktur lobby.
+const coinStyle=document.createElement('style');coinStyle.textContent=`
+.coin-wallet{display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;max-width:340px;box-sizing:border-box;background:#fff5b8;border:3px solid #30244f;border-radius:14px;padding:9px 11px;box-shadow:0 3px 0 #30244f;font:800 11px system-ui,sans-serif}.coin-wallet strong{font-size:16px}.coin-wallet small{display:block;font-size:9px;color:#695a80;margin-top:2px}.coin-lock-badge{position:absolute;z-index:4;top:-7px;right:-7px;background:#30244f;color:#fde047;border:2px solid #fff;border-radius:8px;padding:1px 4px;font:900 8px system-ui,sans-serif;pointer-events:none}.coin-locked{filter:saturate(.48)}.coin-hero-action{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:7px;background:#fff3c4;border:2px solid #30244f;border-radius:10px;padding:8px;font:800 10px system-ui,sans-serif}.coin-hero-action span{display:block;font-size:9px;margin-top:3px}.coin-hero-action button{background:#fde047;border:2px solid #111;padding:7px 9px;font:900 10px system-ui,sans-serif;cursor:pointer}.coin-hero-action.is-owned{display:block;background:#dcfce7;color:#166534}.coin-status-text{width:100%;font-size:9px;color:#7c2d12}.coin-online-note{background:#dcfce7;border:2px solid #166534;border-radius:10px;padding:7px;margin-top:8px;font:800 10px/1.35 system-ui,sans-serif;color:#166534}`;document.head.appendChild(coinStyle);
+const coinWallet=document.createElement('div');coinWallet.className='coin-wallet';coinWallet.innerHTML=`<div>🪙 <strong data-coin-balance>0</strong> KOIN<small>MENANG RANK +${COIN_RANK_WIN} · tanpa koin untuk kalah/seri</small></div><div class="coin-status-text" style="max-width:145px;text-align:right"></div>`;document.getElementById('homeScreen').insertBefore(coinWallet,document.getElementById('modeRow'));
+const onlineUnlockNote=document.createElement('div');onlineUnlockNote.className='coin-online-note';onlineUnlockNote.textContent='TESTING ONLINE: semua 118 hero terbuka tanpa koin.';document.getElementById('lanHeroBox').insertBefore(onlineUnlockNote,document.getElementById('lanHeroNames'));
+
+const coinRecordRank=recordRankResult;
+recordRankResult=function(){const ranked=rankMatch&&!rankRecorded,won=ranked&&p1&&p2&&p1.hp>0&&p2.hp<=0;const message=coinRecordRank();if(!won)return message;loadCoinState();coinState.coins=Math.min(999999999,coinState.coins+COIN_RANK_WIN);const stored=saveCoinState();coinSetMessage(`+${COIN_RANK_WIN} koin dari kemenangan rank!`);coinRefreshWallet();return message+`\n+${COIN_RANK_WIN} koin · saldo ${coinState.coins}`+(stored?'':'\nPenyimpanan koin tidak tersedia');};
+const coinRankPanel=updateRankPanel;
+updateRankPanel=function(){coinRankPanel();const hint=document.getElementById('rankHint');if(hint&&!hint.textContent.includes('koin'))hint.textContent+=' Menang rank +'+COIN_RANK_WIN+' koin.';coinRefreshWallet();};
+const coinRenderDetail=renderDetail;
+renderDetail=function(){coinRenderDetail();const box=document.getElementById('detailBox'),c=CHARACTERS.find(x=>x.id===inspectedId);if(box&&c)box.insertAdjacentHTML('beforeend',coinActionHTML(c.id));coinRefreshWallet();coinSetMessage(coinLastMessage);};
+const coinRefreshHeroOverlay=refreshHeroOverlay;
+refreshHeroOverlay=function(){coinRefreshHeroOverlay();const box=document.getElementById('heroDetail'),id=heroCurrentId(),c=CHARACTERS.find(x=>x.id===id);if(box&&c)box.insertAdjacentHTML('beforeend',coinActionHTML(c.id));coinRefreshBadges();coinRefreshWallet();coinSetMessage(coinLastMessage);};
+const coinRefreshPicker=refreshPicker;
+refreshPicker=function(){coinRefreshPicker();coinRefreshBadges();};
+const coinAssign=assignInspected;
+assignInspected=function(slot){if(isHeroLocked(inspectedId)){coinSetMessage('Hero masih terkunci. Beli dengan koin dari kemenangan rank.');renderDetail();return false;}return coinAssign(slot);};
+const coinToggleFFA=toggleFFACharacter;
+toggleFFACharacter=function(id){if(isHeroLocked(id)&&!selectedFFA.has(id)){inspectedId=id;coinSetMessage('Hero masih terkunci. Beli dulu untuk memasukkannya ke FFA.');renderDetail();refreshPicker();return false;}return coinToggleFFA(id);};
+const coinHeroPick=heroPick;
+heroPick=function(id){const result=coinHeroPick(id);if(isHeroLocked(id))coinSetMessage('Hero terkunci. Tombol pembelian ada di detail hero.');return result;};
+const coinRandomHero=randomHeroId;
+randomHeroId=function(excludeId){const ids=CHARACTERS.map(c=>c.id).filter(id=>id!==excludeId&&!isHeroLocked(id));return ids.length?ids[Math.floor(Math.random()*ids.length)]:coinRandomHero(excludeId);};
+function coinLockedSelections(){const mode=document.getElementById('gameMode').value;let ids=[];if(mode==='team')ids=[...teamSel[1],...teamSel[2]];else if(mode==='ffa')ids=[...selectedFFA];else{ids=[document.getElementById('p1Select').value,document.getElementById('p2Select').value];if(mode==='maze'&&botHeroSel!=='random')ids.push(botHeroSel);}return[...new Set(ids.filter(id=>id&&id!=='random'&&isHeroLocked(id)))];}
+const coinStartGame=startGame;
+startGame=function(){const locked=coinLockedSelections();if(locked.length){const names=locked.map(id=>heroDisplayName(id)).join(', ');coinSetMessage('Buka hero terkunci dulu: '+names);alert('Hero masih terkunci: '+names+'\nMenang rank untuk mendapatkan koin, lalu beli di detail hero.');renderDetail();return false;}return coinStartGame();};
+MODE_INFO['1v1'].explain+=' Menang ranked memberi '+COIN_RANK_WIN+' koin. Kalah, seri, keluar, mode lain, dan online tidak memberi koin.';
+coinRefreshBadges();coinRefreshWallet();coinSetMessage(coinLastMessage);renderDetail();refreshPicker();refreshHeroOverlay();refreshModePicker();updateRankPanel();
+
+
+// ===== BALL FIGHT ONLINE PARTY 1V1 + 2V2 =====
+let lanCapacity=2,lanSlot=null;
+let lanRemoteInputs=Array.from({length:4},()=>({x:0,y:0})),lanRemoteTimes=[0,0,0,0];
+const LAN_PLAYER_COLORS=['#eab308','#22c55e','#a855f7','#f97316'];
+function lanLocalSlot(){return lanRole==='host'?0:(Number.isInteger(lanSlot)?lanSlot:1);}
+function lanNearestOpponent(e){if(!e)return null;const foes=lanFighters.filter(f=>f&&f.hp>0&&isOpponent(e,f));return foes.length?foes.reduce((a,b)=>Math.hypot(a.x-e.x,a.y-e.y)<Math.hypot(b.x-e.x,b.y-e.y)?a:b):null;}
+function lanUpdatePartyModeButtons(){for(const n of[2,4]){const b=document.getElementById('lanMode'+n);if(!b)continue;const active=lanCapacity===n;b.style.background=active?'#fde047':'#fff';b.setAttribute('aria-pressed',String(active));}}
+function lanSetPartySize(n){if(lanInRoom||![2,4].includes(n))return;lanCapacity=n;lanHeroes=Array.from({length:n},(_,i)=>lanHeroes[i]||'Fakhmolitionator');lanUpdatePartyModeButtons();}
+lanButtons=function(){
+ document.getElementById('lanInvite').style.display=lanInRoom&&lanRole==='host'&&lanCount<lanCapacity?'block':'none';
+ document.getElementById('lanControls').style.display=lanInRoom?'none':'flex';document.getElementById('lanLeave').style.display=lanInRoom?'inline-block':'none';document.getElementById('lanHeroBox').style.display=lanInRoom?'block':'none';
+ const modeBox=document.getElementById('lanPartyMode');if(modeBox)modeBox.style.display=lanInRoom?'none':'flex';lanUpdatePartyModeButtons();
+ document.getElementById('onlineSettings').style.display=roomNetwork==='online'&&!lanInRoom?'block':'none';
+ if(lanInRoom){const slot=lanLocalSlot();lanPickerSelected=lanHeroes[slot]||lanHeroes[0];document.getElementById('lanHero').value=lanPickerSelected;if(lanPickerSelected)setLanHeroCategory(heroCategoryOf(lanPickerSelected));renderLanHeroPicker();}
+ const start=document.getElementById('lanStartTest');start.style.display=lanInRoom&&lanRole==='host'&&lanCount===lanCapacity?'inline-block':'none';start.textContent=lanCapacity===4?'MULAI 2V2':'MULAI DUEL 1V1';
+ document.getElementById('lanCreate').disabled=lanPending;document.getElementById('lanJoin').disabled=lanPending;
+};
+lanCreateRoom=function(){lanRequest({type:'create',mode:lanCapacity===4?'2v2':'1v1'});};
+const partyLanPicker=renderLanHeroPicker;
+renderLanHeroPicker=function(){partyLanPicker();const mine=lanLocalSlot();for(let i=0;i<4;i++){const row=document.getElementById('lanPlayer'+(i+1)+'Row'),name=document.getElementById('lanPlayer'+(i+1)+'Name'),tag=document.getElementById('lanPlayer'+(i+1)+'Tag');if(row)row.style.display=i<lanHeroes.length?'block':'none';if(!name||!tag||i>=lanHeroes.length)continue;const hc=CHARACTERS.find(x=>x.id===lanHeroes[i]);name.textContent=hc?hc.name:lanHeroes[i];tag.textContent='P'+(i+1)+(i===0?' · HOST':' · GUEST')+(lanHeroes.length===4?' · TIM '+(i<2?1:2):'')+(i===mine&&lanRole?' · KAMU':'');}};
+lanChooseHero=function(id){if(!CHARACTERS.some(c=>c.id===id))return;lanPickerSelected=id;document.getElementById('lanHero').value=id;if(lanRole)lanHeroes[lanLocalSlot()]=id;renderLanHeroPicker();if(lanInRoom)lanRequest({type:'choose_hero',hero:id});};
+lanApplyRemoteHeroProfile=function(heroId,name,slot=1){if(slot<0||slot>=lanHeroes.length||heroId!==lanHeroes[slot])return;const cleaned=cleanHeroName(name);if(!cleaned)return;if(slot===1)lanRemoteHeroName=cleaned;if(lanFighters[slot])lanFighters[slot].name=cleaned;};
+lanInputMessage=function(x,y){const msg={type:'input',x,y},me=lanRole==='guest'?lanFighters[lanLocalSlot()]:null;if(me){const signature=me.heroId+'|'+me.name;if(signature!==lanLastNameSignature){msg.heroId=me.heroId;msg.heroName=cleanHeroName(me.name);lanLastNameSignature=signature;}}return msg;};
+lanStartMovementTest=function(){if(lanRole!=='host'||lanCount!==lanCapacity)return;const map=lanMakeArenaMap();try{initAudio();}catch(_){}lanSendRaw({type:'start_test',walls:map.walls,mapName:map.name});};
+lanSaveWorldAndCreateHeroes=function(){
+ lanLastNameSignature='';lanRemoteHeroName='';lanSavedWorld={canvas,ctx,p1,p2,gamePlayers,mazeMode,duelMode,mazeWalls,projectiles,particles,floatingTexts,isTeamMode,isFFAMode};
+ canvas=document.getElementById('lanMoveCanvas');ctx=canvas.getContext('2d');mazeMode=true;duelMode=true;mazeWalls=lanArenaWalls;projectiles=[];particles=[];floatingTexts=[];
+ const boss=typeof lanRoomMode!=='undefined'&&lanRoomMode==='boss',count=boss?([1,2,3,4].includes(lanHeroes.length)?lanHeroes.length:1):(lanHeroes.length===4?4:2);lanCapacity=count;isTeamMode=!boss&&count===4;isFFAMode=false;const coopSpots=[[[450,735]],[[290,730],[610,730]],[[210,730],[450,790],[690,730]],[[160,720],[360,790],[640,790],[840,720]]],spots=boss?coopSpots[count-1]:(count===4?[[75,75],[75,825],[825,75],[825,825]]:[[75,75],[825,825]]);
+ const fighters=lanHeroes.slice(0,count).map((id,i)=>{const e=createCharacter(id,spots[i][0],spots[i][1],i>0);e.radius*=MAZE_RADIUS_SCALE;e.manualSkillOnly=true;e.isBot=false;e.vx=0;e.vy=0;if(boss)e.teamId=1;else if(count===4)e.teamId=i<2?1:2;if(lanRole==='host')armUltManual(e);return e;});
+ p1=fighters[0];p2=fighters[1];gamePlayers=fighters;lanFighters=fighters;lanMatchActive=true;for(const e of fighters)if(e instanceof Wemmball)e.target=lanNearestOpponent(e);
+ resetPowerupSystem(true);
+};
+const partyLanRestore=lanRestoreWorld;
+lanRestoreWorld=function(){partyLanRestore();resetPowerupSystem(false);};
+lanBeginMovementTest=function(data){
+ if(!data||!Array.isArray(data.walls))return;lanEndMovementTest();lanArenaWalls=data.walls;lanArenaName=data.mapName||'ARENA';lanArenaCamera=null;
+ if(Array.isArray(data.heroes)&&((typeof lanRoomMode!=='undefined'&&lanRoomMode==='boss')?[1,2,3,4]:[2,4]).includes(data.heroes.length)){lanHeroes=data.heroes.slice();lanCapacity=data.heroes.length;}
+ lanSaveWorldAndCreateHeroes();lanMoveActive=true;lanWinner=null;lanPositions=lanFighters.flatMap(e=>[e.x,e.y]);lanTargetPositions=lanPositions.slice();document.getElementById('lanWinner').style.display='none';
+ lanMoveInput={x:0,y:0};lanRemoteInput={x:0,y:0};lanRemoteInputs=Array.from({length:4},()=>({x:0,y:0}));lanRemoteTimes=lanRemoteTimes.map(()=>performance.now());lanRemoteAt=performance.now();lanLastFrame=0;lanLastSend=0;
+ document.querySelector('#lanMoveOverlay h2').textContent=(roomNetwork==='online'?'ONLINE':'LAN')+(lanCapacity===4?' · 2V2':' · 1V1');document.getElementById('lanMoveOverlay').style.display='block';lanUpdateBattleHud();lanMoveFrame=requestAnimationFrame(lanMovementFrame);
+};
+const partyLanTickHero=lanTickHero;
+lanTickHero=function(e,enemy,input,dt){if(!e||e.hp<=0||!enemy)return;partyLanTickHero(e,enemy,input,dt);};
+const PARTY_EXTRA_RENDER=['powerHasteTimer','expAttackSpeedTimer','expDefenseTimer','expDefenseFactor','expArmorBreakTimer','expBurnTimer','expMarkTimer','expMarks','expLifestealTimer','expThermalTimer','expCcImmuneTimer','expOvercharge','expTrailTimer','expStealth','expSilenceTimer','expRootTimer','expConfuseTimer','expCharmTimer','expBlindTimer','expSpeedTimer','expDamageTimer','expDamageFactor','expDash'];
+for(const k of PARTY_EXTRA_RENDER)if(!LAN_RENDER_FIELDS.includes(k))LAN_RENDER_FIELDS.push(k);
+lanBuildSnapshot=function(){
+ const players=lanFighters.map(e=>{const data={};for(const k of LAN_RENDER_FIELDS)if(e[k]!==undefined)data[k]=lanCloneVisual(e[k]);if(e.meleeTelegraph){const t=e.meleeTelegraph;data.meleeTelegraph={time:t.time,maxTime:t.maxTime,angle:t.angle,range:t.range,damage:t.damage,effect:t.effect,target:lanFighters.indexOf(t.target)};}return{data,ready:!!(e.isUltReady&&e.isUltReady())};});
+ const shots=projectiles.slice(0,100).map(pr=>({x:pr.x,y:pr.y,r:pr.r,dmg:pr.dmg,kind:pr.kind,color:pr.color,accent:pr.accent,boomerang:pr.boomerang,returning:pr.returning,vx:pr.vx,vy:pr.vy,owner:lanFighters.indexOf(pr.owner),target:lanFighters.indexOf(pr.target)}));
+ const effects=floatingTexts.slice(-40).map(ft=>({x:ft.x,y:ft.y,text:String(ft.text).slice(0,40),color:ft.color,timer:ft.timer}));
+ const drops=plusDrops.slice(0,3).map(p=>({id:p.id,type:p.type,x:p.x,y:p.y,age:p.age,life:p.life}));
+ const blasts=plusBlasts.slice(0,4).map(b=>({x:b.x,y:b.y,r:b.r,time:b.time,maxTime:b.maxTime,damage:b.damage,owner:lanFighters.indexOf(b.owner),teamId:b.teamId}));
+ return{type:'battle_state',winner:lanWinner,players,shots,effects,drops,blasts,names:lanFighters.map(e=>cleanHeroName(e.name)||heroOriginalName(e.heroId))};
+};
+lanApplySnapshot=function(data){
+ const count=lanFighters.length,allowed=(typeof lanBossActive!=='undefined'&&lanBossActive)?[1,2,3,4]:[2,4];if(!lanMoveActive||!allowed.includes(count)||!Array.isArray(data.players)||data.players.length!==count)return;
+ for(let i=0;i<count;i++){
+  const s=data.players[i],e=lanFighters[i];if(!s||!s.data)continue;if(Array.isArray(data.names)&&typeof data.names[i]==='string'){const name=cleanHeroName(data.names[i]);if(name)e.name=name;}const d=s.data;
+  if(e instanceof Bakso&&Number.isFinite(d.plopSeq)&&d.plopSeq>(e.plopSeq||0))playBaksoPlop();if(Number.isFinite(d.x))lanTargetPositions[i*2]=d.x;if(Number.isFinite(d.y))lanTargetPositions[i*2+1]=d.y;
+  for(const k of LAN_RENDER_FIELDS){if(k==='x'||k==='y'||k==='expDash'||d[k]===undefined)continue;if(LAN_ARRAY_FIELDS.has(k)){if(Array.isArray(d[k]))e[k]=d[k].slice(0,220);}else if(typeof d[k]==='number'&&Number.isFinite(d[k]))e[k]=d[k];else if(typeof d[k]==='boolean'||typeof d[k]==='string')e[k]=d[k];}
+  e.expDash=d.expDash&&typeof d.expDash==='object'?lanCloneVisual(d.expDash):null;
+  const mt=d.meleeTelegraph;if(mt&&Number.isFinite(mt.time)&&Number.isFinite(mt.angle)){e.meleeTelegraph={target:lanFighters[mt.target]||null,time:mt.time,maxTime:Number.isFinite(mt.maxTime)?mt.maxTime:180,angle:mt.angle,range:Number.isFinite(mt.range)?mt.range:72,damage:Number.isFinite(mt.damage)?mt.damage:0,effect:typeof mt.effect==='string'?mt.effect:''};}else e.meleeTelegraph=null;
+  e.lanReady=!!s.ready;
+ }
+ for(const e of lanFighters)if(e instanceof Wemmball)e.target=lanNearestOpponent(e);
+ projectiles=(Array.isArray(data.shots)?data.shots:[]).slice(0,100).filter(pr=>pr&&Number.isFinite(pr.x)&&Number.isFinite(pr.y)&&Number.isFinite(pr.r)).map(pr=>({x:pr.x,y:pr.y,r:Math.max(1,Math.min(40,pr.r)),dmg:pr.dmg,kind:pr.kind,color:pr.color,accent:pr.accent,boomerang:pr.boomerang,returning:pr.returning,vx:Number.isFinite(pr.vx)?pr.vx:0,vy:Number.isFinite(pr.vy)?pr.vy:0,owner:lanFighters[pr.owner],target:lanFighters[pr.target]}));
+ floatingTexts=(Array.isArray(data.effects)?data.effects:[]).slice(0,40).filter(ft=>ft&&Number.isFinite(ft.x)&&Number.isFinite(ft.y)&&Number.isFinite(ft.timer)&&typeof ft.text==='string');
+ plusDrops=(Array.isArray(data.drops)?data.drops:[]).slice(0,3).filter(p=>p&&PLUS_POWERUP_TYPES[p.type]&&Number.isFinite(p.x)&&Number.isFinite(p.y)).map(p=>({id:Number.isFinite(p.id)?p.id:0,type:p.type,x:p.x,y:p.y,age:Number.isFinite(p.age)?p.age:800,life:Number.isFinite(p.life)?p.life:1000}));
+ plusBlasts=(Array.isArray(data.blasts)?data.blasts:[]).slice(0,4).filter(b=>b&&Number.isFinite(b.x)&&Number.isFinite(b.y)&&Number.isFinite(b.time)).map(b=>({x:b.x,y:b.y,r:Number.isFinite(b.r)?b.r:175,time:b.time,maxTime:Number.isFinite(b.maxTime)?b.maxTime:550,damage:Number.isFinite(b.damage)?b.damage:35,owner:lanFighters[b.owner]||null,teamId:Number.isFinite(b.teamId)?b.teamId:0}));
+ lanWinner=data.winner||null;
+};
+lanUpdateBattleHud=function(){
+ const count=lanFighters.length,allowed=(typeof lanBossActive!=='undefined'&&lanBossActive)?[1,2,3,4]:[2,4];if(!allowed.includes(count))return;const hud=document.getElementById('lanBattleHud');hud.classList.toggle('party',count===4);
+ for(let i=0;i<4;i++){const el=document.getElementById('lanHud'+(i+1));if(!el)continue;el.style.display=i<count?'flex':'none';if(i>=count)continue;const e=lanFighters[i],name=String(e.name||'HERO'),short=name.length>(count===4?9:13)?name.slice(0,(count===4?8:12))+'…':name;el.textContent='P'+(i+1)+(count===4?' T'+(i<2?1:2):'')+' '+short+' · '+(e instanceof Amat?'SH '+Math.ceil(e.shield):'HP '+Math.ceil(e.hp));}
+ const slot=lanLocalSlot(),me=lanFighters[slot];if(!me)return;const skill=document.getElementById('lanSkillLabel');if(typeof me.manualSkill1!=='function')skill.textContent='TIDAK ADA';else if(me instanceof BladeDancer)skill.textContent='ENERGI '+Math.floor(me.energy)+'%';else if(me instanceof Phantom)skill.textContent=phantomSkillLabel(me);else if(me instanceof ExpansionHero){const label=me.def.skillName.toUpperCase();skill.textContent=me.manualCd1>0?label+' '+(me.manualCd1/1000).toFixed(1)+'s':label+' SIAP';}else skill.textContent=me.manualCd1>0?'SKILL CD '+(me.manualCd1/1000).toFixed(1)+'s':'SKILL SIAP';
+ const ready=lanRole==='host'?(me.isUltReady&&me.isUltReady()):me.lanReady;document.getElementById('lanUltLabel').textContent=me instanceof Dummies?'TIDAK ADA':me instanceof Wemmball?'AUTO '+Math.max(0,Math.ceil(me.orbitalTimer/1000))+'s':me.isUltMode?'AKTIF':(ready?'SIAP':Math.floor(me.ultCharge||0)+'%');
+ document.getElementById('lanMoveInfo').textContent='P'+(slot+1)+' '+me.name+(count===4?' · TIM '+(slot<2?1:2):' · '+(slot===0?'KUNING':'UNGU'))+' (kamu)';const second=document.getElementById('lanSkill2Btn');second.style.display=me instanceof Mathemathing?'block':'none';if(me instanceof Mathemathing)second.textContent=me.manualCd2>0?'SKILL 2 '+(me.manualCd2/1000).toFixed(1)+'s':'SKILL 2 · ORB';
+ const banner=document.getElementById('lanWinner');banner.style.display=lanWinner?'block':'none';if(lanWinner){if(lanWinner==='DRAW')banner.textContent='SERI!';else if(lanWinner.startsWith('TEAM'))banner.textContent=lanWinner===(slot<2?'TEAM1':'TEAM2')?'TIM KAMU MENANG!':'TIM LAWAN MENANG!';else banner.textContent=lanWinner===('P'+(slot+1))?'KAMU MENANG!':'KAMU KALAH!';}
+};
+function lanComputeWinner(){const count=lanFighters.length;if(count===2){const a=lanFighters[0].hp>0,b=lanFighters[1].hp>0;return a&&b?null:(!a&&!b?'DRAW':(a?'P1':'P2'));}const t1=lanFighters.slice(0,2).some(e=>e.hp>0),t2=lanFighters.slice(2,4).some(e=>e.hp>0);return t1&&t2?null:(!t1&&!t2?'DRAW':(t1?'TEAM1':'TEAM2'));}
+lanMovementFrame=function(now){
+ if(!lanMoveActive)return;const dt=lanLastFrame?Math.min(.05,(now-lanLastFrame)/1000):0;lanLastFrame=now;const count=lanFighters.length;
+ if(lanRole==='host'){
+  for(let i=1;i<count;i++)if(now-lanRemoteTimes[i]>500)lanRemoteInputs[i]={x:0,y:0};
+  if(!lanWinner){
+   for(let i=0;i<count;i++){const e=lanFighters[i];if(e instanceof Wemmball)e.target=lanNearestOpponent(e);lanTickHero(e,lanNearestOpponent(e),i===0?lanMoveInput:(lanRemoteInputs[i]||{x:0,y:0}),dt*1000);}
+   for(const e of lanFighters){tickFillerPush(e,dt*1000);resolveWalls(e);constrainEntityToArena(e);resolveFillerCones(e);}for(let i=0;i<count;i++)for(let j=i+1;j<count;j++)if(lanFighters[i].hp>0&&lanFighters[j].hp>0)resolveBallCollision(lanFighters[i],lanFighters[j]);
+   tickPowerupSystem(dt*1000,lanFighters);lanUpdateShots(dt*1000);for(const e of lanFighters)if(e instanceof Phantom)e.validatePhantomMark();for(let i=floatingTexts.length-1;i>=0;i--){floatingTexts[i].y-=40*dt;floatingTexts[i].timer-=dt;if(floatingTexts[i].timer<=0)floatingTexts.splice(i,1);}lanWinner=lanComputeWinner();
+  }
+  lanPositions=lanFighters.flatMap(e=>[e.x,e.y]);particles=[];if(now-lanLastSend>=50){lanSendRaw(lanBuildSnapshot());lanLastSend=now;}
+ }else{const t=1-Math.exp(-15*dt);for(let i=0;i<count*2;i++)lanPositions[i]+=(lanTargetPositions[i]-lanPositions[i])*t;for(let i=0;i<count;i++){lanFighters[i].x=lanPositions[i*2];lanFighters[i].y=lanPositions[i*2+1];}if(now-lanLastSend>=50){lanSendRaw(lanInputMessage(lanMoveInput.x,lanMoveInput.y));lanLastSend=now;}}
+ lanUpdateBattleHud();lanDrawArena(dt);lanMoveFrame=requestAnimationFrame(lanMovementFrame);
+};
+lanDrawArena=function(dt){
+ const ctx=document.getElementById('lanMoveCanvas').getContext('2d');ctx.setTransform(1,0,0,1,0,0);ctx.clearRect(0,0,900,900);const count=lanFighters.length,valid=lanPositions.length===count*2&&lanPositions.every(Number.isFinite)&&((typeof lanBossActive!=='undefined'&&lanBossActive)?[1,2,3,4]:[2,4]).includes(count)&&lanFighters.every(e=>e&&Number.isFinite(e.radius)&&e.radius>0);
+ const mine=lanLocalSlot(),indices=valid?lanFighters.map((e,i)=>i).filter(i=>i===mine||!lanFighters[i].phantomVeil):[0,1],points=indices.length?indices:[mine];let minX=900,maxX=0,minY=900,maxY=0;
+ if(valid){for(const i of points){const x=lanPositions[i*2],y=lanPositions[i*2+1],r=lanFighters[i].radius;minX=Math.min(minX,x-r);maxX=Math.max(maxX,x+r);minY=Math.min(minY,y-r);maxY=Math.max(maxY,y+r);}}else{minX=minY=0;maxX=maxY=900;}
+ const spanX=maxX-minX,spanY=maxY-minY,centerX=(minX+maxX)/2,centerY=(minY+maxY)/2,wanted=Math.max(1,Math.min(1.8,900/(spanX+180),900/(spanY+180))),maxVisible=Math.max(1,Math.min(2.4,900/(spanX+20),900/(spanY+20)));
+ if(!lanArenaCamera||![lanArenaCamera.x,lanArenaCamera.y,lanArenaCamera.z].every(Number.isFinite))lanArenaCamera={x:centerX,y:centerY,z:Math.min(wanted,maxVisible)};if(lanCameraFull||!valid)lanArenaCamera={x:450,y:450,z:1};else{const step=Math.max(0,Math.min(.05,Number.isFinite(dt)?dt:0)),pan=1-Math.exp(-5*step),zoom=1-Math.exp(-(wanted<lanArenaCamera.z?12:2.2)*step);lanArenaCamera.z=Math.max(1,Math.min(maxVisible,lanArenaCamera.z+(wanted-lanArenaCamera.z)*zoom));lanArenaCamera.x+=(centerX-lanArenaCamera.x)*pan;lanArenaCamera.y+=(centerY-lanArenaCamera.y)*pan;const half=450/lanArenaCamera.z;lanArenaCamera.x=clampCameraAxis(lanArenaCamera.x,minX,maxX,half,900);lanArenaCamera.y=clampCameraAxis(lanArenaCamera.y,minY,maxY,half,900);}
+ const z=lanArenaCamera.z;ctx.setTransform(z,0,0,z,450-lanArenaCamera.x*z,450-lanArenaCamera.y*z);ctx.fillStyle='#f1f5f9';ctx.fillRect(0,0,900,900);ctx.fillStyle='#e2e8f0';for(let i=0;i<6;i++)for(let j=0;j<6;j++)if((i+j)%2===0)ctx.fillRect(i*150,j*150,150,150);
+ if(count===4){ctx.fillStyle='rgba(250,204,21,.22)';ctx.fillRect(0,0,150,150);ctx.fillRect(0,750,150,150);ctx.fillStyle='rgba(168,85,247,.20)';ctx.fillRect(750,0,150,150);ctx.fillRect(750,750,150,150);}else{ctx.fillStyle='rgba(250,204,21,.28)';ctx.fillRect(0,0,150,150);ctx.fillStyle='rgba(168,85,247,.25)';ctx.fillRect(750,750,150,150);}
+ ctx.fillStyle='rgba(15,23,42,.28)';for(const w of lanArenaWalls)ctx.fillRect(w.x+4,w.y+5,w.w,w.h);for(const w of lanArenaWalls){ctx.fillStyle='#1f2937';ctx.fillRect(w.x,w.y,w.w,w.h);ctx.fillStyle='#374151';ctx.fillRect(w.x+4,w.y+4,w.w-8,w.h-8);ctx.fillStyle='#4b5563';ctx.fillRect(w.x+4,w.y+4,w.w-8,5);}ctx.strokeStyle='#1f2937';ctx.lineWidth=6;ctx.strokeRect(0,0,900,900);
+ const me=lanFighters[mine];if(me&&typeof me.manualSkill1==='function')drawAimPreview(me,lanAim);drawPowerupDrops();
+ for(let i=0;i<count;i++){const e=lanFighters[i];if(!e||(e.phantomVeil&&i!==mine))continue;e.draw();ctx.save();if(e.ghostCloakTimer>0)ctx.globalAlpha=.28;ctx.beginPath();ctx.arc(e.x,e.y,e.radius+5,0,0,Math.PI*2);ctx.strokeStyle=LAN_PLAYER_COLORS[i];ctx.lineWidth=4;ctx.stroke();ctx.font='bold 14px sans-serif';ctx.textAlign='center';ctx.fillStyle=LAN_PLAYER_COLORS[i];ctx.fillText('P'+(i+1)+(count===4?' · T'+(i<2?1:2):''),e.x,e.y-e.radius-17);ctx.restore();}
+ drawPhantomMarks();lanDrawShots();for(const ft of floatingTexts){ctx.globalAlpha=Math.max(0,Math.min(1,ft.timer));ctx.fillStyle=ft.color;ctx.font='bold 15px sans-serif';ctx.textAlign='center';ctx.strokeStyle='#000';ctx.lineWidth=3;ctx.strokeText(ft.text,ft.x,ft.y);ctx.fillText(ft.text,ft.x,ft.y);ctx.globalAlpha=1;}drawArenaControl();
+};
+lanButtons();renderLanHeroPicker();
+
+
+// ===== BALL FIGHT BALANCE & COMBAT INDICATORS =====
+const BALANCE_DAMAGE_MULTIPLIER=1.12,BALANCE_HP_MULTIPLIER=1.10,BALANCE_EXEMPT=new Set(['Fakhmolitionator']);
+const balanceOriginalD=D;
+D=function(hero,key){const value=balanceOriginalD(hero,key);return BALANCE_EXEMPT.has(hero)?value:Math.round(value*BALANCE_DAMAGE_MULTIPLIER*100)/100;};
+const balanceCreateCharacter=createCharacter;
+createCharacter=function(id,x,y,isP2){const e=balanceCreateCharacter(id,x,y,isP2);if(e&&!BALANCE_EXEMPT.has(id)&&!e.balanceBuffed){e.balanceBuffed=true;if(e instanceof Amat){e.maxShield=Math.round((e.maxShield||e.shield||0)*BALANCE_HP_MULTIPLIER);e.shield=Math.round((e.shield||0)*BALANCE_HP_MULTIPLIER);}else{const oldMax=e.maxHp||e.hp;e.maxHp=Math.round(oldMax*BALANCE_HP_MULTIPLIER);e.hp=Math.min(e.maxHp,Math.round((e.hp||oldMax)*BALANCE_HP_MULTIPLIER));}}return e;};
+const balanceNote=document.createElement('div');balanceNote.className='coin-online-note';balanceNote.style.margin='6px 0 0';balanceNote.textContent='BALANCE: semua hero selain Fakhmolitionator +12% damage dan +10% HP/shield. Nilai efektif di ATUR DAMAGE sudah termasuk buff.';document.querySelector('.damage-panel-note').appendChild(balanceNote);
+function combatIndicatorEnemy(e){const foes=gamePlayers.filter(f=>f&&f!==e&&f.hp>0&&isOpponent(e,f));return foes.length?foes.reduce((a,b)=>Math.hypot(a.x-e.x,a.y-e.y)<Math.hypot(b.x-e.x,b.y-e.y)?a:b):null;}
+function drawCombatIndicators(){
+ const now=performance.now();
+ for(const e of gamePlayers){
+  if(!e||e.hp<=0)continue;const enemy=combatIndicatorEnemy(e);
+  if(e.meleeTelegraph){const t=e.meleeTelegraph,progress=1-Math.max(0,t.time)/(t.maxTime||180),r=e.radius+(t.range||72);ctx.save();ctx.strokeStyle=progress>.65?'#ef4444':'#facc15';ctx.lineWidth=5;ctx.setLineDash([12,7]);ctx.beginPath();ctx.arc(e.x,e.y,r,t.angle-.72,t.angle+.72);ctx.stroke();ctx.setLineDash([]);for(let i=-2;i<=2;i++){const a=t.angle+i*.25,inner=e.radius+8;ctx.beginPath();ctx.moveTo(e.x+Math.cos(a)*inner,e.y+Math.sin(a)*inner);ctx.lineTo(e.x+Math.cos(a)*r,e.y+Math.sin(a)*r);ctx.stroke();}ctx.restore();}
+  else if(enemy&&e.attackTimer>0&&e.attackTimer<240){const dist=Math.hypot(enemy.x-e.x,enemy.y-e.y);if(dist<185){const a=Math.atan2(enemy.y-e.y,enemy.x-e.x),p=1-e.attackTimer/240;ctx.save();ctx.globalAlpha=.2+.45*p;ctx.fillStyle=p>.7?'#ef4444':'#f59e0b';ctx.strokeStyle='#7c2d12';ctx.lineWidth=2;ctx.setLineDash([6,5]);ctx.beginPath();ctx.moveTo(e.x,e.y);ctx.arc(e.x,e.y,Math.min(150,dist+e.radius),a-.42,a+.42);ctx.closePath();ctx.fill();ctx.stroke();ctx.setLineDash([]);ctx.restore();}}
+  if(e instanceof ExpansionHero&&e.manualCd1>0&&e.skillCooldown-e.manualCd1<350){const elapsed=Math.max(0,e.skillCooldown-e.manualCd1),left=Math.max(0,1-elapsed/350);ctx.save();ctx.globalAlpha=left;ctx.strokeStyle=e.def.color;ctx.lineWidth=4;ctx.setLineDash([4,6]);ctx.beginPath();ctx.arc(e.x,e.y,e.radius+16+8*(1-left),0,Math.PI*2);ctx.stroke();ctx.setLineDash([]);ctx.restore();}
+ }
+ // Setiap angka damage mendapat starburst, termasuk angka yang datang dari snapshot guest.
+ for(const ft of floatingTexts){if(!ft||!/^\d+$/.test(String(ft.text)))continue;const alpha=Math.max(0,Math.min(1,ft.timer||1));ctx.save();ctx.globalAlpha=alpha*.7;ctx.strokeStyle='#fff200';ctx.lineWidth=3;for(let i=0;i<8;i++){const a=i*Math.PI/4,r1=13+(1-alpha)*8,r2=r1+10;ctx.beginPath();ctx.moveTo(ft.x+Math.cos(a)*r1,ft.y+Math.sin(a)*r1);ctx.lineTo(ft.x+Math.cos(a)*r2,ft.y+Math.sin(a)*r2);ctx.stroke();}ctx.restore();}
+}
+const indicatorGameLoop=gameLoop;
+gameLoop=function(timestamp){indicatorGameLoop(timestamp);if(!lanMatchActive)drawCombatIndicators();};
+const indicatorLanDraw=lanDrawArena;
+lanDrawArena=function(dt){indicatorLanDraw(dt);drawCombatIndicators();};
+renderDamageFields();renderDetail();
+
+
+// ===== BALL FIGHT ONLINE READY CHECK =====
+let lanReadyStates=[],lanRoomMode='1v1';
+const readyBox=document.createElement('div');readyBox.id='lanReadyBox';readyBox.style.cssText='display:none;margin-top:12px;background:#fff;border:3px solid #111;padding:10px';readyBox.innerHTML='<button id="lanReadyBtn" type="button" style="width:100%;padding:11px;background:#fde047;border:3px solid #111;font-weight:900">✓ SAYA SIAP</button><div id="lanReadyList" style="margin-top:8px;font:800 10px/1.5 system-ui,sans-serif"></div>';document.getElementById('lanRoomOverlay').insertBefore(readyBox,document.getElementById('lanStartTest'));
+function lanRequiredPlayers(){return lanRoomMode==='boss'?Math.max(1,lanCount):lanCapacity;}
+function lanAllRequiredReady(){const n=lanRequiredPlayers();return n>=1&&lanCount>=n&&lanReadyStates.length>=n&&lanReadyStates.slice(0,n).every(Boolean);}
+function lanToggleReady(){if(!lanInRoom||!lanRole)return;const slot=lanLocalSlot(),ready=!lanReadyStates[slot];lanReadyStates[slot]=ready;lanButtons();lanRequest({type:'ready',ready});}
+function lanRefreshReadyUi(){
+ const box=document.getElementById('lanReadyBox');if(!box)return;box.style.display=lanInRoom?'block':'none';if(!lanInRoom)return;const slot=lanLocalSlot(),btn=document.getElementById('lanReadyBtn');btn.textContent=lanReadyStates[slot]?'↩ BATAL SIAP':'✓ SAYA SIAP';btn.style.background=lanReadyStates[slot]?'#86efac':'#fde047';
+ const list=document.getElementById('lanReadyList');list.innerHTML='';for(let i=0;i<lanCount;i++){const c=CHARACTERS.find(x=>x.id===lanHeroes[i]),row=document.createElement('div');row.textContent=(lanReadyStates[i]?'✓ ':'○ ')+'P'+(i+1)+' · '+(c?c.name:lanHeroes[i])+(i===0?' (HOST)':'');row.style.color=lanReadyStates[i]?'#166534':'#6b7280';list.appendChild(row);}
+ const start=document.getElementById('lanStartTest');if(lanRole==='host'){start.style.display='inline-block';const enough=lanCount>=lanRequiredPlayers(),ready=lanAllRequiredReady();start.disabled=!(enough&&ready);start.style.opacity=start.disabled?'.5':'1';start.textContent=!enough?'MENUNGGU PEMAIN':(!ready?'MENUNGGU SIAP '+lanReadyStates.slice(0,lanRequiredPlayers()).filter(Boolean).length+'/'+lanRequiredPlayers():(lanRoomMode==='boss'?'MULAI BOSS · '+lanCount+' PEMAIN':(lanCapacity===4?'MULAI 2V2':'MULAI DUEL 1V1')));}
+}
+const readyLanButtons=lanButtons;lanButtons=function(){readyLanButtons();lanRefreshReadyUi();};
+const readySetParty=lanSetPartySize;lanSetPartySize=function(n){lanRoomMode=n===4?'2v2':'1v1';lanReadyStates=[];return readySetParty(n);};
+const readyChooseHero=lanChooseHero;lanChooseHero=function(id){const result=readyChooseHero(id);if(lanInRoom){lanReadyStates[lanLocalSlot()]=false;lanRefreshReadyUi();}return result;};
+const readyStart=lanStartMovementTest;lanStartMovementTest=function(){if(!lanAllRequiredReady()){lanStatus('Semua pemain harus menekan SIAP dulu.');return false;}return readyStart();};
+document.getElementById('lanReadyBtn').onclick=lanToggleReady;lanButtons();
+
+
+// ===== BALL FIGHT ONLINE CO-OP BOSS 1-4 PEMAIN =====
+// Host tetap otoritatif. Guest hanya menerima entity, hazard, dan telegraf melalui battle_state.
+const BOSS_DEFS=[
+ {id:'mineKing',name:'RAJAMINA 9000',color:'#f97316',accent:'#fde047',hp:1900,damage:29,radius:76,cooldown:1050,combo:'Fakhmolitionator + Bakso + Mathemathing',attacks:[{kind:'mines',label:'RANJAU PENEKAN',warn:1250},{kind:'rockets',label:'ROKET BERBURU',warn:1100},{kind:'orbit',label:'ORB LEDAK',warn:1000},{kind:'slam',label:'PLOP SEISMIK',warn:1150}]},
+ {id:'twinColossus',name:'SIAM COLOSSUS',color:'#ec4899',accent:'#67e8f9',hp:2200,damage:31,radius:82,cooldown:980,combo:'Siamese Slasher + BladeDancer + Vexen',attacks:[{kind:'twinSlash',label:'TEBASAN KEMBAR',warn:1050},{kind:'dash',label:'TERJUNA SIAM',warn:1100},{kind:'orbit',label:'PEDANG ORBITAL',warn:1000},{kind:'slam',label:'HENTAKAN RAKSASA',warn:1200}]},
+ {id:'stormArchon',name:'ARCHON BADAI',color:'#38bdf8',accent:'#fef08a',hp:1800,damage:27,radius:74,cooldown:900,combo:'Wemmball + Mathemathing + Deadbibi',attacks:[{kind:'lightning',label:'SAMBARAN BERANTAI',warn:1150},{kind:'orbit',label:'ORB ELITRA',warn:950},{kind:'dash',label:'TERBANG PETIR',warn:1050},{kind:'rockets',label:'TEMBAKAN MAUT',warn:1150}]},
+ {id:'voidMatriarch',name:'MATRIARKA VOID',color:'#7c3aed',accent:'#f0abfc',hp:2100,damage:30,radius:80,cooldown:1000,combo:'Black Hole + Phantom + Gloo',attacks:[{kind:'gravity',label:'SUMPAH GRAVITASI',warn:1250},{kind:'voidZones',label:'LENDIR VOID',warn:1200},{kind:'shadowLines',label:'BAYANGAN MENEMBUS',warn:1050},{kind:'slam',label:'TELANAN VOID',warn:1200}]},
+ {id:'prismHydra',name:'HYDRA PRISMA',color:'#14b8a6',accent:'#f9a8d4',hp:2400,damage:32,radius:84,cooldown:940,combo:'Mathemathing + Vexen + Fakhmolitionator',attacks:[{kind:'prismLines',label:'KIPAS PRISMA',warn:1100},{kind:'orbit',label:'LIMA ORB KEPALA',warn:1000},{kind:'rockets',label:'BURUAN HIDRA',warn:1150},{kind:'prismLines',label:'PECAHAN PRISMA',warn:1050}]}
+];
+let lanBossActive=false,lanBossState=null,lanBossHazards=[],lanBossSelected='mineKing',lanBossRoomCapacity=4;
+function lanBossDef(id){return BOSS_DEFS.find(b=>b.id===id)||BOSS_DEFS[0];}
+function lanBossScaling(count,id=lanBossSelected){const n=Math.max(1,Math.min(4,Number(count)||1)),d=lanBossDef(id);return{players:n,hp:Math.round(d.hp*(1+.78*(n-1))),damage:Math.round((1+.18*(n-1))*100)/100,tempo:Math.round((1+.12*(n-1))*100)/100};}
+class OnlineBossEntity extends BaseEntity{
+ constructor(id,count){const d=lanBossDef(id),s=lanBossScaling(count,id);super(450,205,d.radius,d.color,true);this.heroId='boss:'+d.id;this.bossId=d.id;this.name=d.name;this.isBoss=true;this.teamId=999;this.radius=d.radius;this.maxHp=s.hp;this.hp=s.hp;this.vx=0;this.vy=0;this.stunTimer=0;this.slowTimer=0;}
+ update(){}
+ draw(){}
+ takeDamage(amount){if(this.hp<=0)return 0;amount=Number(amount);if(!Number.isFinite(amount)||amount<=0)return 0;if(this.vulnerabilityTimer>0)amount*=1+(this.vulnerabilityStacks||0)*.08;const before=this.hp;this.hp=Math.max(0,this.hp-amount);const dealt=before-this.hp;if(dealt>0&&this.onDamaged)this.onDamaged(dealt);createFloatingText(this.x,this.y-this.radius-18,String(Math.round(dealt)),'#fff7ad');playHeavyHit();return dealt;}
+}
+function lanBossMakeState(id,count){const d=lanBossDef(id),s=lanBossScaling(count,id),entity=new OnlineBossEntity(d.id,count);return{id:d.id,def:d,entity,playerCount:s.players,baseDamageScale:s.damage,baseTempo:s.tempo,damageScale:s.damage,tempo:s.tempo,attackIndex:0,cooldown:1500,telegraph:null,phase:1,elapsed:0,attacksStarted:0,attacksExecuted:0};}
+const bossModeButton=document.createElement('button');bossModeButton.id='lanModeBoss';bossModeButton.type='button';bossModeButton.setAttribute('aria-pressed','false');bossModeButton.style.cssText='flex:1;padding:11px 4px;background:#fff;border:3px solid #111;font-weight:900;font-size:10px';bossModeButton.textContent='BOSS · 1–4';bossModeButton.onclick=()=>lanSetBossMode();document.getElementById('lanPartyMode').appendChild(bossModeButton);
+const bossPicker=document.createElement('div');bossPicker.id='lanBossPicker';bossPicker.style.cssText='display:none;margin-top:12px;background:#fff7ed;border:3px solid #111;padding:10px';bossPicker.innerHTML='<div style="font-weight:1000;font-size:12px">PILIH BOSS · ONLINE CO-OP</div><div id="lanBossGrid" style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:8px"></div><div id="lanBossDetail" style="margin-top:8px;font-size:10px;line-height:1.45"></div>';document.getElementById('lanRoomOverlay').insertBefore(bossPicker,document.getElementById('lanHeroBox'));
+const bossGrid=document.getElementById('lanBossGrid');for(const d of BOSS_DEFS){const b=document.createElement('button');b.type='button';b.dataset.bossId=d.id;b.textContent=d.name;b.style.cssText='padding:8px 4px;background:#fff;border:2px solid #111;font-size:9px;font-weight:900';b.onclick=()=>lanBossChoose(d.id);bossGrid.appendChild(b);}
+const bossBar=document.createElement('div');bossBar.id='lanBossBar';bossBar.style.cssText='display:none;margin:5px 0;background:#1e1b4b;color:#fff;border:3px solid #111;padding:6px;font-size:10px;font-weight:800';bossBar.innerHTML='<div style="display:flex;justify-content:space-between;gap:6px"><span id="lanBossName">BOSS</span><span id="lanBossHp">HP</span></div><div style="height:10px;background:#0f172a;border:2px solid #fff;margin:4px 0"><div id="lanBossHpFill" style="height:100%;width:100%;background:#f43f5e"></div></div><div id="lanBossAttack" style="color:#fef08a">BERSIAP…</div><div id="lanBossScale" style="font-size:8px;color:#c4b5fd;margin-top:2px"></div>';document.getElementById('lanBattleHud').insertAdjacentElement('afterend',bossBar);
+const bossIntro=document.querySelector('#lanRoomOverlay>p');if(bossIntro)bossIntro.textContent='Pilih 1v1, 2v2, atau boss online. Boss dapat dimainkan solo sebagai host hingga co-op empat HP; semua pemain wajib SIAP.';
+function lanBossModeButtons(){const active=lanRoomMode==='boss';bossModeButton.style.display=roomNetwork==='online'&&!lanInRoom?'block':'none';bossModeButton.style.background=active?'#fb923c':'#fff';bossModeButton.setAttribute('aria-pressed',String(active));if(active)for(const n of[2,4]){const b=document.getElementById('lanMode'+n);if(b){b.style.background='#fff';b.setAttribute('aria-pressed','false');}}}
+function lanSetBossMode(){if(lanInRoom)return;if(roomNetwork!=='online'){lanStatus('Mode boss hanya tersedia di ONLINE. Buka DUEL ONLINE untuk membuat room boss.');return;}lanRoomMode='boss';lanCapacity=4;lanHeroes=Array.from({length:4},(_,i)=>lanHeroes[i]||'Fakhmolitionator');lanUpdatePartyModeButtons();lanStatus('BOSS ONLINE: main solo sebagai host atau undang hingga 3 teman. Pilih boss dan hero, lalu semua tekan SIAP.');}
+function lanBossRenderPicker(){const show=lanInRoom&&lanRoomMode==='boss';bossPicker.style.display=show?'block':'none';if(!show)return;const d=lanBossDef(lanBossSelected);for(const b of bossGrid.children){const selected=b.dataset.bossId===d.id;b.style.background=selected?d.color:'#fff';b.style.color=selected?'#fff':'#111';b.disabled=lanRole!=='host';b.style.opacity=lanRole==='host'||selected?'1':'.55';}document.getElementById('lanBossDetail').textContent=(lanRole==='host'?'Host memilih boss. ':'Boss pilihan host. ')+d.combo+' · HP '+lanBossScaling(lanCount,d.id).hp+' · damage ×'+lanBossScaling(lanCount,d.id).damage+' · tempo ×'+lanBossScaling(lanCount,d.id).tempo+'. Skala mengikuti '+lanCount+' pemain.';}
+function lanBossChoose(id){if(lanRole!=='host'||lanRoomMode!=='boss'||!BOSS_DEFS.some(b=>b.id===id))return;lanBossSelected=id;lanBossRenderPicker();lanSendRaw({type:'choose_boss',bossId:id});}
+const bossLanUpdateModes=lanUpdatePartyModeButtons;lanUpdatePartyModeButtons=function(){bossLanUpdateModes();lanBossModeButtons();};
+const bossLanSetParty=lanSetPartySize;lanSetPartySize=function(n){bossLanSetParty(n);if(!lanInRoom&&[2,4].includes(n)){lanRoomMode=n===4?'2v2':'1v1';lanUpdatePartyModeButtons();}};
+const bossLanCreate=lanCreateRoom;lanCreateRoom=function(){if(lanRoomMode==='boss'){if(roomNetwork!=='online'){lanStatus('Mode boss hanya tersedia online.');return;}lanRequest({type:'create',mode:'boss'});return;}bossLanCreate();};
+function lanBossTarget(){const alive=lanFighters.filter(e=>e&&e.hp>0);if(!alive.length)return null;const b=lanBossState.entity;return alive.reduce((a,e)=>Math.hypot(e.x-b.x,e.y-b.y)<Math.hypot(a.x-b.x,a.y-b.y)?e:a,alive[0]);}
+function lanBossHazard(kind,x,y,time,damage,label,extra={}){return Object.assign({kind,x,y,time,maxTime:time,damage,label},extra);}
+function lanBossAttackHazards(attack){const s=lanBossState,b=s.entity,target=lanBossTarget(),angle=target?Math.atan2(target.y-b.y,target.x-b.x):Math.PI/2,dmg=s.def.damage*s.damageScale,t=attack.warn,h=[];const alive=lanFighters.filter(e=>e&&e.hp>0);const targets=alive.length?alive:[b];
+ if(attack.kind==='mines'){for(let i=0;i<targets.length;i++){const e=targets[i];h.push(lanBossHazard('circle',e.x,e.y,t,dmg*1.05,attack.label,{r:72,target:lanFighters.indexOf(e)}));}h.push(lanBossHazard('circle',450,450,t,dmg,attack.label,{r:82,target:-1}));}
+ else if(attack.kind==='rockets'){for(const e of targets)h.push(lanBossHazard('circle',e.x,e.y,t,dmg*.8,attack.label,{r:60,target:lanFighters.indexOf(e)}));}
+ else if(attack.kind==='orbit')h.push(lanBossHazard('circle',b.x,b.y,t,dmg*.75,attack.label,{r:165,target:-1,angle:0}));
+ else if(attack.kind==='slam'||attack.kind==='gravity'){const e=target||b;h.push(lanBossHazard('circle',e.x,e.y,t,dmg*(attack.kind==='slam'?1.25:1),attack.label,{r:attack.kind==='slam'?128:165,target:lanFighters.indexOf(e)}));}
+ else if(attack.kind==='voidZones'){for(const e of targets)h.push(lanBossHazard('circle',e.x,e.y,t,dmg*.9,attack.label,{r:108,target:lanFighters.indexOf(e)}));}
+ else if(attack.kind==='dash')h.push(lanBossHazard('line',b.x,b.y,t,dmg*1.2,attack.label,{angle,length:560,width:82}));
+ else if(attack.kind==='twinSlash')for(const off of[-.48,.48])h.push(lanBossHazard('line',b.x,b.y,t,dmg*.78,attack.label,{angle:angle+off,length:480,width:58}));
+ else if(attack.kind==='lightning')for(const e of targets){const a=Math.atan2(e.y-b.y,e.x-b.x),len=Math.hypot(e.x-b.x,e.y-b.y)+100;h.push(lanBossHazard('line',b.x,b.y,t,dmg*.9,attack.label,{angle:a,length:len,width:36,target:lanFighters.indexOf(e)}));}
+ else if(attack.kind==='shadowLines'||attack.kind==='prismLines'){const offsets=attack.kind==='prismLines'?[-.6,-.3,0,.3,.6]:[-.42,0,.42];for(const off of offsets)h.push(lanBossHazard('line',b.x,b.y,t,dmg*(attack.kind==='prismLines'?.62:.72),attack.label,{angle:angle+off,length:650,width:attack.kind==='prismLines'?32:42}));}
+ return h;
+}
+function lanBossBeginAttack(){const s=lanBossState;if(!s||s.entity.hp<=0)return;const attack=s.def.attacks[s.attackIndex%s.def.attacks.length];s.attackIndex++;s.telegraph={kind:attack.kind,label:attack.label,time:attack.warn,maxTime:attack.warn};lanBossHazards=lanBossAttackHazards(attack);s.attacksStarted++;}
+function lanBossHitCircle(h,damage){const hits=[];for(const e of lanFighters){if(!e||e.hp<=0)continue;if(Math.hypot(e.x-h.x,e.y-h.y)<h.r+e.radius){e.takeDamage(damage,true);hits.push(e);}}return hits;}
+function lanBossHitLine(h,damage){for(const e of lanFighters){if(!e||e.hp<=0)continue;const dx=e.x-h.x,dy=e.y-h.y,along=dx*Math.cos(h.angle)+dy*Math.sin(h.angle),side=Math.abs(-dx*Math.sin(h.angle)+dy*Math.cos(h.angle));if(along>=-e.radius&&along<=h.length+e.radius&&side<h.width/2+e.radius)e.takeDamage(damage,true);}}
+function lanBossSpawnShot(angle,target,damage,speed=285,r=10){const b=lanBossState.entity;projectiles.push({kind:'bossShot',x:b.x+Math.cos(angle)*(b.radius+8),y:b.y+Math.sin(angle)*(b.radius+8),vx:Math.cos(angle)*speed,vy:Math.sin(angle)*speed,r,dmg:damage,life:4200,owner:b,target:target||null,homing:!!target,color:lanBossState.def.accent,accent:lanBossState.def.color});}
+function lanBossExecuteAttack(){const s=lanBossState;if(!s||!s.telegraph)return;const attack=s.telegraph,hs=lanBossHazards.slice(),b=s.entity;
+ if(attack.kind==='rockets'){for(const h of hs){const target=lanFighters[h.target]&&lanFighters[h.target].hp>0?lanFighters[h.target]:lanBossTarget();if(!target)continue;const a=Math.atan2(target.y-b.y,target.x-b.x);for(const off of[-.09,.09])lanBossSpawnShot(a+off,target,h.damage,275,10);}}
+ else if(attack.kind==='orbit'){const count=s.phase===2?16:12;for(let i=0;i<count;i++)lanBossSpawnShot(i*Math.PI*2/count+(s.attackIndex%2)*.12,null,hs[0]?hs[0].damage:s.def.damage*s.damageScale,255,11);}
+ else if(attack.kind==='dash'){for(const h of hs){lanBossHitLine(h,h.damage);b.x=Math.max(b.radius+12,Math.min(900-b.radius-12,b.x+Math.cos(h.angle)*Math.min(h.length,430)));b.y=Math.max(b.radius+12,Math.min(900-b.radius-12,b.y+Math.sin(h.angle)*Math.min(h.length,430)));}}
+ else if(attack.kind==='gravity'){for(const h of hs)for(const e of lanBossHitCircle(h,h.damage)){const d=Math.hypot(h.x-e.x,h.y-e.y)||1;e.vx+=(h.x-e.x)/d*250;e.vy+=(h.y-e.y)/d*250;e.slowTimer=Math.max(e.slowTimer||0,1200);e.slowFactor=.65;}}
+ else if(attack.kind==='voidZones'){for(const h of hs)for(const e of lanBossHitCircle(h,h.damage)){e.slowTimer=Math.max(e.slowTimer||0,1800);e.slowFactor=.55;}}
+ else if(attack.kind==='prismLines'){for(const h of hs){lanBossHitLine(h,h.damage);lanBossSpawnShot(h.angle,null,h.damage*.55,300,9);}}
+ else for(const h of hs){if(h.kind==='circle')lanBossHitCircle(h,h.damage);else if(h.kind==='line')lanBossHitLine(h,h.damage);}
+ s.attacksExecuted++;s.telegraph=null;lanBossHazards=[];s.cooldown=s.def.cooldown/s.tempo;createFloatingText(b.x,b.y-b.radius-32,attack.label,s.def.accent);
+}
+function lanBossTick(dt){const s=lanBossState;if(!s||dt<=0||s.entity.hp<=0)return;const b=s.entity;s.elapsed+=dt;const phase=s.phase;b.vulnerabilityTimer=Math.max(0,(b.vulnerabilityTimer||0)-dt);if(phase===1&&b.hp>0&&b.hp/b.maxHp<=.5){s.phase=2;s.tempo=s.baseTempo*1.15;s.damageScale=s.baseDamageScale*1.1;s.cooldown=Math.min(s.cooldown,650);createFloatingText(b.x,b.y-b.radius-35,'FASE 2!',s.def.accent);}
+ const target=lanBossTarget();if(target&&!s.telegraph){const dx=target.x-b.x,dy=target.y-b.y,d=Math.hypot(dx,dy)||1;let dir=0;if(d>310)dir=1;else if(d<175)dir=-1;const speed=44*Math.min(1.35,s.tempo);b.x+=dx/d*speed*dir*dt/1000;b.y+=dy/d*speed*dir*dt/1000;b.x=Math.max(b.radius+12,Math.min(900-b.radius-12,b.x));b.y=Math.max(b.radius+12,Math.min(900-b.radius-12,b.y));}
+ if(s.telegraph){s.telegraph.time-=dt;for(const h of lanBossHazards)h.time=Math.max(0,h.time-dt);if(s.telegraph.time<=0)lanBossExecuteAttack();}else{s.cooldown-=dt;if(s.cooldown<=0)lanBossBeginAttack();}}
+function lanBossSnapshot(){const s=lanBossState;if(!s)return null;const b=s.entity;return{id:s.id,x:b.x,y:b.y,hp:b.hp,maxHp:b.maxHp,radius:b.radius,phase:s.phase,attackIndex:s.attackIndex,cooldown:s.cooldown,damageScale:s.damageScale,tempo:s.tempo,attacksStarted:s.attacksStarted,attacksExecuted:s.attacksExecuted,telegraph:s.telegraph?{kind:s.telegraph.kind,label:s.telegraph.label,time:s.telegraph.time,maxTime:s.telegraph.maxTime}:null};}
+function lanBossApplySnapshot(data){const s=lanBossState;if(!s||!data)return;if(data.boss&&data.boss.id===s.id){const b=data.boss,e=s.entity;for(const k of['x','y','hp','maxHp','radius','attackIndex','cooldown','damageScale','tempo','attacksStarted','attacksExecuted'])if(Number.isFinite(b[k]))e[k]=b[k];for(const k of['attackIndex','cooldown','damageScale','tempo','attacksStarted','attacksExecuted'])if(Number.isFinite(b[k]))s[k]=b[k];s.phase=b.phase===2?2:1;s.telegraph=b.telegraph&&Number.isFinite(b.telegraph.time)?{kind:String(b.telegraph.kind||''),label:String(b.telegraph.label||'SERANGAN'),time:b.telegraph.time,maxTime:Number.isFinite(b.telegraph.maxTime)?b.telegraph.maxTime:1000}:null;}
+ lanBossHazards=(Array.isArray(data.hazards)?data.hazards:[]).slice(0,50).filter(h=>h&&Number.isFinite(h.x)&&Number.isFinite(h.y)&&Number.isFinite(h.time)).map(h=>Object.assign({},h,{r:Number.isFinite(h.r)?Math.max(1,Math.min(300,h.r)):80,time:Math.max(0,h.time),maxTime:Number.isFinite(h.maxTime)?h.maxTime:1000,angle:Number.isFinite(h.angle)?h.angle:0,length:Number.isFinite(h.length)?Math.max(0,Math.min(900,h.length)):0,width:Number.isFinite(h.width)?Math.max(1,Math.min(200,h.width)):30}));}
+const bossLanBuildSnapshot=lanBuildSnapshot;lanBuildSnapshot=function(){const packet=bossLanBuildSnapshot();if(lanBossActive&&lanBossState){packet.boss=lanBossSnapshot();packet.hazards=lanBossHazards.slice(0,50).map(h=>lanCloneVisual(h));}return packet;};
+const bossLanApplySnapshot=lanApplySnapshot;lanApplySnapshot=function(data){bossLanApplySnapshot(data);if(lanBossActive)lanBossApplySnapshot(data);};
+const bossLanNearest=lanNearestOpponent;lanNearestOpponent=function(e){if(!lanBossActive||!lanBossState)return bossLanNearest(e);if(e===lanBossState.entity)return lanBossTarget();if(lanFighters.includes(e))return lanBossState.entity.hp>0?lanBossState.entity:null;return bossLanNearest(e);};
+const bossIsOpponent=isOpponent;isOpponent=function(a,b){if(lanBossActive&&lanBossState){if(!a||!b||a===b)return false;if(a===lanBossState.entity)return lanFighters.includes(b);if(b===lanBossState.entity)return lanFighters.includes(a);return false;}return bossIsOpponent(a,b);};
+const bossCheckOutcome=checkMatchOutcome;checkMatchOutcome=function(){if(lanBossActive)return;return bossCheckOutcome();};
+const bossLanComputeWinner=lanComputeWinner;lanComputeWinner=function(){if(!lanBossActive||!lanBossState)return bossLanComputeWinner();if(lanBossState.entity.hp<=0)return'PLAYERS';return lanFighters.some(e=>e&&e.hp>0)?null:'BOSS';};
+const bossLanMovementFrame=lanMovementFrame;lanMovementFrame=function(now){if(lanBossActive&&lanRole==='host'&&lanMoveActive&&!lanWinner){const dt=lanLastFrame?Math.min(.05,(now-lanLastFrame)/1000):0;lanBossTick(dt*1000);}bossLanMovementFrame(now);};
+const bossLanBegin=lanBeginMovementTest;lanBeginMovementTest=function(data){if(data&&data.mode==='boss'){lanRoomMode='boss';lanBossSelected=BOSS_DEFS.some(b=>b.id===data.bossId)?data.bossId:'mineKing';lanBossRoomCapacity=4;bossLanBegin(data);lanBossState=lanBossMakeState(lanBossSelected,lanFighters.length);lanBossActive=true;lanBossHazards=[];gamePlayers=[...lanFighters,lanBossState.entity];if(lanFighters.length===1)p2=lanBossState.entity;lanCameraFull=true;lanArenaCamera={x:450,y:450,z:1};document.querySelector('#lanMoveOverlay h2').textContent='BOSS ONLINE · '+lanBossState.def.name;document.getElementById('lanCameraButton').textContent='KAMERA: PETA UTUH';lanUpdateBattleHud();return;}bossLanBegin(data);lanBossActive=false;lanBossState=null;lanBossHazards=[];};
+const bossLanEnd=lanEndMovementTest;lanEndMovementTest=function(){const wasBoss=lanBossActive;bossLanEnd();if(wasBoss){lanBossActive=false;lanBossState=null;lanBossHazards=[];lanCapacity=lanBossRoomCapacity;lanCameraFull=false;bossBar.style.display='none';document.getElementById('lanCameraButton').textContent='KAMERA: DINAMIS';}};
+const bossLanStart=lanStartMovementTest;lanStartMovementTest=function(){if(lanRoomMode!=='boss'){bossLanStart();return;}if(lanRole!=='host'||lanCount<1||!lanAllRequiredReady())return;try{initAudio();}catch(_){}lanSendRaw({type:'start_test',walls:[],mapName:'BOSS · '+lanBossDef(lanBossSelected).name});};
+const bossLanHud=lanUpdateBattleHud;lanUpdateBattleHud=function(){bossLanHud();if(!lanBossActive||!lanBossState){bossBar.style.display='none';return;}const s=lanBossState,b=s.entity;bossBar.style.display='block';document.getElementById('lanBossName').textContent=s.def.name+' · FASE '+s.phase;document.getElementById('lanBossHp').textContent=Math.ceil(b.hp)+' / '+b.maxHp;document.getElementById('lanBossHpFill').style.width=Math.max(0,Math.min(100,b.hp/b.maxHp*100))+'%';document.getElementById('lanBossAttack').textContent=s.telegraph?'⚠ '+s.telegraph.label+' · '+Math.max(0,s.telegraph.time/1000).toFixed(1)+'s':'Serangan berikutnya · '+Math.max(0,s.cooldown/1000).toFixed(1)+'s';document.getElementById('lanBossScale').textContent=s.playerCount+' PEMAIN · DAMAGE ×'+s.damageScale.toFixed(2)+' · TEMPO ×'+s.tempo.toFixed(2)+' · '+s.def.combo;
+ for(let i=0;i<lanFighters.length;i++){const e=lanFighters[i],el=document.getElementById('lanHud'+(i+1));if(el)el.textContent='P'+(i+1)+' '+String(e.name||'HERO').slice(0,10)+' · HP '+Math.ceil(e.hp);}const slot=lanLocalSlot(),me=lanFighters[slot];if(me)document.getElementById('lanMoveInfo').textContent='P'+(slot+1)+' '+me.name+' · TIM CO-OP (kamu)';const banner=document.getElementById('lanWinner');if(lanWinner==='PLAYERS'){banner.style.display='block';banner.textContent='BOSS DIKALAHKAN! TIM KAMU MENANG!';}else if(lanWinner==='BOSS'){banner.style.display='block';banner.textContent='BOSS MENANG · COBA LAGI!';}};
+function lanBossDrawHazard(c,h){const f=Math.max(0,Math.min(1,h.time/(h.maxTime||1000))),pulse=.16+.22*(1-f);c.save();c.globalAlpha=1;c.setLineDash([14,9]);c.lineDashOffset=-h.time/45;c.font='bold 13px system-ui';c.textAlign='center';c.lineWidth=4;
+ if(h.kind==='circle'){c.fillStyle=`rgba(239,68,68,${pulse})`;c.strokeStyle='#b91c1c';c.beginPath();c.arc(h.x,h.y,h.r,0,Math.PI*2);c.fill();c.stroke();c.setLineDash([]);c.beginPath();c.arc(h.x,h.y,h.r*(1-f*.65),0,Math.PI*2);c.strokeStyle='rgba(255,255,255,.8)';c.lineWidth=2;c.stroke();c.fillStyle='#7f1d1d';c.fillText('⚠ '+Math.max(0,h.time/1000).toFixed(1),h.x,h.y+4);}
+ else if(h.kind==='line'){c.lineCap='round';c.strokeStyle=`rgba(239,68,68,${pulse+.08})`;c.lineWidth=h.width;c.beginPath();c.moveTo(h.x,h.y);c.lineTo(h.x+Math.cos(h.angle)*h.length,h.y+Math.sin(h.angle)*h.length);c.stroke();c.strokeStyle='#991b1b';c.lineWidth=4;c.setLineDash([16,10]);c.stroke();c.setLineDash([]);const tx=h.x+Math.cos(h.angle)*h.length*.65,ty=h.y+Math.sin(h.angle)*h.length*.65;c.fillStyle='#7f1d1d';c.fillText('⚠',tx,ty);}
+ c.restore();}
+function lanBossDrawBody(c){const s=lanBossState;if(!s)return;const b=s.entity,d=s.def,t=s.elapsed/1000,r=b.radius;c.save();c.translate(b.x,b.y);c.globalAlpha=b.hp>0?1:.35;c.fillStyle='rgba(15,23,42,.2)';c.beginPath();c.ellipse(7,r*.72,r*1.05,r*.42,0,0,Math.PI*2);c.fill();c.strokeStyle=d.accent;c.lineWidth=6;c.setLineDash([18,9]);c.lineDashOffset=-s.elapsed/55;c.beginPath();c.arc(0,0,r+13,0,Math.PI*2);c.stroke();c.setLineDash([]);c.fillStyle=d.color;c.strokeStyle='#111';c.lineWidth=6;c.beginPath();c.arc(0,0,r,0,Math.PI*2);c.fill();c.stroke();
+ if(s.id==='twinColossus'){for(const side of[-1,1]){c.fillStyle=side<0?d.color:d.accent;c.beginPath();c.arc(side*r*.42,0,r*.62,0,Math.PI*2);c.fill();c.stroke();c.fillStyle='#111';c.beginPath();c.arc(side*r*.55,-10,6,0,Math.PI*2);c.fill();}}
+ else if(s.id==='prismHydra'){for(let i=0;i<5;i++){const a=i*Math.PI*2/5-Math.PI/2,x=Math.cos(a)*r*.75,y=Math.sin(a)*r*.75;c.fillStyle=i%2?d.accent:d.color;c.beginPath();c.arc(x,y,r*.28,0,Math.PI*2);c.fill();c.stroke();}}
+ else{for(let i=0;i<(s.id==='stormArchon'?3:4);i++){const a=i*Math.PI*2/(s.id==='stormArchon'?3:4)+t*.35,x=Math.cos(a)*(r+8),y=Math.sin(a)*(r+8);c.fillStyle=d.accent;c.beginPath();c.arc(x,y,9,0,Math.PI*2);c.fill();c.stroke();}}
+ c.fillStyle=s.id==='voidMatriarch'?'#020617':'#fff';c.beginPath();c.arc(0,0,r*.48,0,Math.PI*2);c.fill();c.stroke();c.fillStyle=s.id==='voidMatriarch'?'#fff':'#111';c.font='1000 17px system-ui';c.textAlign='center';c.textBaseline='middle';c.fillText(Math.ceil(b.hp),0,0);c.font='1000 12px system-ui';c.fillStyle=d.accent;c.strokeStyle='#111';c.lineWidth=3;c.strokeText('BOSS · F'+s.phase,0,-r-25);c.fillText('BOSS · F'+s.phase,0,-r-25);c.restore();}
+const bossLanDraw=lanDrawArena;lanDrawArena=function(dt){bossLanDraw(dt);if(!lanBossActive||!lanBossState)return;const c=document.getElementById('lanMoveCanvas').getContext('2d');for(const h of lanBossHazards)lanBossDrawHazard(c,h);lanBossDrawBody(c);};
+const bossLanButtons=lanButtons;lanButtons=function(){bossLanButtons();lanBossModeButtons();lanBossRenderPicker();};
+const bossLanPicker=renderLanHeroPicker;renderLanHeroPicker=function(){bossLanPicker();if(lanRoomMode==='boss')for(let i=0;i<lanHeroes.length;i++){const tag=document.getElementById('lanPlayer'+(i+1)+'Tag');if(tag)tag.textContent='P'+(i+1)+(i===0?' · HOST':' · GUEST')+' · CO-OP'+(i===lanLocalSlot()&&lanRole?' · KAMU':'');}};
+lanBossModeButtons();
+
     </script>
 </body>
 </html>
