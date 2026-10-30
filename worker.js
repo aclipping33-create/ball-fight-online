@@ -31,7 +31,7 @@ const HEROES = new Set([
     'PortalArchitect', 'ZeusThundergod', 'SingularityVoid', 'ManaSiphon',
     'HexCurser', 'SolarFlareMage', 'GravityInverter', 'SpatialDistorter',
     'ChainSpark', 'PlagueCarrier', 'TimeRewinder', 'TornadoSummoner',
-    'CosmicSupernova', 'SiameseSlasher',
+    'CosmicSupernova', 'SiameseSlasher', 'Goshiki', 'ARitdri',
 ]);
 const ALPHABET='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
 const DEFAULT_HERO='Fakhmolitionator';

@@ -1,12 +1,21 @@
 {
-  "name": "ball-fight-cloudflare",
-  "version": "1.0.0",
+  "name": "ball-fight-portrait",
+  "version": "1.3.0",
   "private": true,
+  "description": "Ball Fight portrait offline, LAN and Cloudflare Workers relay \u2014 120 heroes",
   "scripts": {
-    "build": "mkdir -p public && cp game.html public/game.html",
-    "deploy": "wrangler deploy"
+    "start": "node server.js",
+    "prepare:worker": "node prepare-worker.cjs",
+    "deploy": "npm run prepare:worker && wrangler deploy",
+    "assets": "node update-assets.cjs"
+  },
+  "dependencies": {
+    "ws": "^8.18.0"
   },
   "devDependencies": {
-    "wrangler": "4.155.0"
+    "wrangler": "^4.0.0"
+  },
+  "engines": {
+    "node": ">=20"
   }
 }

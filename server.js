@@ -3,6 +3,7 @@ const http = require('http');
 const fs = require('fs');
 const path = require('path');
 const os = require('os');
+const {serveAssets} = require('./asset-files.cjs');
 function lanAddresses() {
     try { return [...new Set(Object.values(os.networkInterfaces()).flat().filter(x => x && (x.family === 'IPv4' || x.family === 4) && !x.internal).map(x => x.address))]; } catch (_) { return []; }
 }
@@ -16,9 +17,10 @@ const server = http.createServer((req, res) => {
         return res.end(JSON.stringify({game:'ball-fight-online',protocol:1,maxPlayers:4,modes:['1v1','2v2','boss']}));
     }
     if (url === '/lan-info') {
-        res.writeHead(200, {'Content-Type':'application/json; charset=utf-8','Cache-Control':'no-store'});
-        return res.end(JSON.stringify({ips:[]}));
+        res.writeHead(200, {'Content-Type':'application/json; charset=utf-8','Access-Control-Allow-Origin':'*','Cache-Control':'no-store'});
+        return res.end(JSON.stringify({ips:lanAddresses()}));
     }
+    if (serveAssets(req,res,url)) return;
     if (url !== '/' && url !== '/game.html') {
         res.writeHead(404, { 'Content-Type': 'text/plain; charset=utf-8' });
         return res.end('Tidak ditemukan');
@@ -66,7 +68,7 @@ const heroIds = new Set([
     'PortalArchitect', 'ZeusThundergod', 'SingularityVoid', 'ManaSiphon',
     'HexCurser', 'SolarFlareMage', 'GravityInverter', 'SpatialDistorter',
     'ChainSpark', 'PlagueCarrier', 'TimeRewinder', 'TornadoSummoner',
-    'CosmicSupernova', 'SiameseSlasher',
+    'CosmicSupernova', 'SiameseSlasher', 'Goshiki', 'ARitdri',
 ]);
 
 const DEFAULT_HERO='Fakhmolitionator';
