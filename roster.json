@@ -1,0 +1,33 @@
+{
+  "version": "2.7.0",
+  "offlineHeroes": [
+    "Mathemathing",
+    "BladeDancer",
+    "Goshiki",
+    "Fakhmolitionator",
+    "Gravity",
+    "Deadbibi",
+    "Bane",
+    "Dummies",
+    "Amat",
+    "FasiamSlicer",
+    "FosaVoldigold",
+    "Paradox"
+  ],
+  "networkHeroes": [
+    "Mathemathing",
+    "BladeDancer",
+    "Goshiki",
+    "Fakhmolitionator",
+    "Gravity",
+    "Deadbibi",
+    "Bane",
+    "Dummies",
+    "Amat",
+    "FasiamSlicer",
+    "FosaVoldigold",
+    "Paradox"
+  ],
+  "protocol": 5,
+  "matchTimeLimit": null
+}

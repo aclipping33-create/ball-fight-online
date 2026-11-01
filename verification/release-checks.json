@@ -1,0 +1,70 @@
+{
+  "version": "2.7.0",
+  "protocol": 5,
+  "heroesOffline": 12,
+  "heroesNetwork": 12,
+  "noMatchTimeLimits": true,
+  "abilityTimingRetained": true,
+  "mechanics": {
+    "passed": 109,
+    "files": [
+      "server-tests.json",
+      "fasiam-mechanics.json",
+      "chaos-mechanics.json",
+      "duelists-mechanics.json",
+      "evasion-mechanics.json",
+      "online12-mechanics.json"
+    ]
+  },
+  "browser": {
+    "evasion": 12,
+    "chaosRegression": 19
+  },
+  "actualWebSocketBrowserTests": {
+    "retained": 7,
+    "online12": 9,
+    "maximumConcurrentPeers": 4
+  },
+  "apkBundleChecks": 9,
+  "mp3DecodeChecks": 36,
+  "waveformAudioCases": 15,
+  "workerRecoveryChecks": 3,
+  "normalizedUnchangedHeroSnapshotComparisons": 1800,
+  "unchangedImageAndConfigFiles": 75,
+  "workerDryRun": "PASS, not deployed",
+  "idempotentBuild": true,
+  "threeGeneratedHtmlIdentical": true,
+  "assets": {
+    "files": 111,
+    "media": 99,
+    "mp3": 36,
+    "heroImages": 60,
+    "heroConfigs": 12,
+    "arenaMenuImages": 3
+  },
+  "apk": {
+    "version": "2.7.0",
+    "package": "com.ballfight.portrait",
+    "versionCode": 2700,
+    "minSdk": 23,
+    "targetSdk": 35,
+    "certificateSha256": "cccf3d553768698d435a43cccae15cb9e413b8541be7ece6ad69089efb7fcd5f",
+    "apkSha256": "8a6d32753d54cb53253caf1429f710e55fada902a2d00e48f385d3e71224a36a",
+    "bytes": 1415852,
+    "signatures": {
+      "v1": true,
+      "v2": true,
+      "v3": true
+    },
+    "zipalign": true,
+    "bundledMedia": 99,
+    "assetFiles": 111,
+    "physicalAndroidInstallTested": false
+  },
+  "limitations": [
+    "No physical Android installation/lifecycle/speaker/thermal/battery tests",
+    "No public internet deployment or actual Wi-Fi phones",
+    "No cloud-account quotas verified",
+    "CI APK workflow supplied but not executed on user account"
+  ]
+}

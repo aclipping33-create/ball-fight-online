@@ -1,0 +1,27 @@
+{
+  "hero": "FasiamSlicer",
+  "ball": {
+    "scale": 1,
+    "opacity": 1
+  },
+  "basic": {
+    "scale": 1,
+    "opacity": 1
+  },
+  "skill": {
+    "scale": 1,
+    "opacity": 1
+  },
+  "ultimate": {
+    "scale": 1,
+    "opacity": 1
+  },
+  "trail": {
+    "durationMs": 300,
+    "width": 1.1,
+    "opacity": 0.8,
+    "color": "#39eaff"
+  },
+  "customSprites": false,
+  "note": "Default body, twin weapons and domain are animated Canvas 2D; customSprites true enables optional texture overlays."
+}

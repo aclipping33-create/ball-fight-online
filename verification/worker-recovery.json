@@ -1,0 +1,9 @@
+{
+  "checks": [
+    "Interrupted active DO restores socket slots, cancels match and clears ready without inventing state",
+    "Hibernated lobby retains code, heroes, slots and ready metadata",
+    "Completed result and full damage ranking recover on resync without restarting ticks"
+  ],
+  "passed": 3,
+  "note": "Fake storage/sockets exercise actual RoomRelay constructor callbacks under Node. This is not a live Cloudflare deployment or a workerd network test for release 2.7.0."
+}

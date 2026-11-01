@@ -1,0 +1,25 @@
+{
+  "ball": {
+    "scale": 1,
+    "opacity": 1
+  },
+  "basic": {
+    "scale": 1,
+    "opacity": 1
+  },
+  "skill": {
+    "scale": 1,
+    "opacity": 0.75
+  },
+  "ultimate": {
+    "scale": 1,
+    "opacity": 0.75
+  },
+  "hero": "Paradox",
+  "trail": {
+    "durationMs": 220,
+    "width": 1,
+    "opacity": 0.65,
+    "color": "#a8f3ff"
+  }
+}

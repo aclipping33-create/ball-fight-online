@@ -1,0 +1,19 @@
+{
+  "version": "2.7.0",
+  "package": "com.ballfight.portrait",
+  "versionCode": 2700,
+  "minSdk": 23,
+  "targetSdk": 35,
+  "certificateSha256": "cccf3d553768698d435a43cccae15cb9e413b8541be7ece6ad69089efb7fcd5f",
+  "apkSha256": "8a6d32753d54cb53253caf1429f710e55fada902a2d00e48f385d3e71224a36a",
+  "bytes": 1415852,
+  "signatures": {
+    "v1": true,
+    "v2": true,
+    "v3": true
+  },
+  "zipalign": true,
+  "bundledMedia": 99,
+  "assetFiles": 111,
+  "physicalAndroidInstallTested": false
+}

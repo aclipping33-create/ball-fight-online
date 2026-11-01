@@ -1,0 +1,240 @@
+{
+  "passed": 9,
+  "checks": [
+    "All 12 heroes, 111 asset files and portrait shell load from bundled app-local origin",
+    "All 12 network picker choices bundled; blank LAN IP does not pretend the APK is a server",
+    "Bundled native Fasiam split/shared HP/domain/cancel works entirely offline",
+    "Bundled Paradox uses Absolute Evasion and auto-basic, no obsolete manual BASIC",
+    "Actual offline Party runs past 60 seconds and Boss past 180 seconds without timeout/enrage",
+    "All 36 bundled MP3s decode to non-silent, unclipped audio",
+    "Real bundled custom MP3 playback respects volume and mute",
+    "Settings persist across bundled app-origin reload",
+    "No external network requests, missing media or JavaScript exceptions in bundle smoke test"
+  ],
+  "decode": [
+    {
+      "file": "audio/hit_amat.mp3",
+      "duration": 0.2873469387755102,
+      "peak": 0.1548471301794052,
+      "rms": 0.01936598528407005
+    },
+    {
+      "file": "audio/hit_bane.mp3",
+      "duration": 0.3395918367346939,
+      "peak": 0.19186116755008698,
+      "rms": 0.027895563589901383
+    },
+    {
+      "file": "audio/hit_bladedancer.mp3",
+      "duration": 0.2612244897959184,
+      "peak": 0.12091860175132751,
+      "rms": 0.015055402225506073
+    },
+    {
+      "file": "audio/hit_deadbibi.mp3",
+      "duration": 0.2612244897959184,
+      "peak": 0.1439169943332672,
+      "rms": 0.019678111369447845
+    },
+    {
+      "file": "audio/hit_dummies.mp3",
+      "duration": 0.2873469387755102,
+      "peak": 0.1483268141746521,
+      "rms": 0.019969115265628768
+    },
+    {
+      "file": "audio/hit_fakhmolitionator.mp3",
+      "duration": 0.2873469387755102,
+      "peak": 0.1499464064836502,
+      "rms": 0.019655818847639093
+    },
+    {
+      "file": "audio/hit_fasiamslicer.mp3",
+      "duration": 0.2873469387755102,
+      "peak": 0.08455642312765121,
+      "rms": 0.010113684342217523
+    },
+    {
+      "file": "audio/hit_fosavoldigold.mp3",
+      "duration": 0.2873469387755102,
+      "peak": 0.16334764659404755,
+      "rms": 0.0193925561673279
+    },
+    {
+      "file": "audio/hit_goshiki.mp3",
+      "duration": 0.3395918367346939,
+      "peak": 0.08990437537431717,
+      "rms": 0.013130687988145123
+    },
+    {
+      "file": "audio/hit_gravity.mp3",
+      "duration": 0.2612244897959184,
+      "peak": 0.1533326506614685,
+      "rms": 0.01998430799205695
+    },
+    {
+      "file": "audio/hit_mathemathing.mp3",
+      "duration": 0.3395918367346939,
+      "peak": 0.09421248733997345,
+      "rms": 0.013475427620593188
+    },
+    {
+      "file": "audio/hit_paradox.mp3",
+      "duration": 0.2612244897959184,
+      "peak": 0.11997474730014801,
+      "rms": 0.01517052937046479
+    },
+    {
+      "file": "audio/skill_amat.mp3",
+      "duration": 0.3395918367346939,
+      "peak": 0.27964529395103455,
+      "rms": 0.03450343014434844
+    },
+    {
+      "file": "audio/skill_bane.mp3",
+      "duration": 0.3395918367346939,
+      "peak": 0.2808968424797058,
+      "rms": 0.03143367068591959
+    },
+    {
+      "file": "audio/skill_bladedancer.mp3",
+      "duration": 0.3395918367346939,
+      "peak": 0.319182425737381,
+      "rms": 0.04125334582659852
+    },
+    {
+      "file": "audio/skill_deadbibi.mp3",
+      "duration": 0.3657142857142857,
+      "peak": 0.21493901312351227,
+      "rms": 0.021758507650274598
+    },
+    {
+      "file": "audio/skill_dummies.mp3",
+      "duration": 0.2612244897959184,
+      "peak": 0.15751229226589203,
+      "rms": 0.019346432464408175
+    },
+    {
+      "file": "audio/skill_fakhmolitionator.mp3",
+      "duration": 0.3395918367346939,
+      "peak": 0.26638278365135193,
+      "rms": 0.033017063575235796
+    },
+    {
+      "file": "audio/skill_fasiamslicer.mp3",
+      "duration": 0.3395918367346939,
+      "peak": 0.3276817798614502,
+      "rms": 0.04131726220575611
+    },
+    {
+      "file": "audio/skill_fosavoldigold.mp3",
+      "duration": 0.4179591836734694,
+      "peak": 0.3247239589691162,
+      "rms": 0.05079594891433889
+    },
+    {
+      "file": "audio/skill_goshiki.mp3",
+      "duration": 0.3657142857142857,
+      "peak": 0.1905388981103897,
+      "rms": 0.022221157900751506
+    },
+    {
+      "file": "audio/skill_gravity.mp3",
+      "duration": 0.3395918367346939,
+      "peak": 0.283969521522522,
+      "rms": 0.03415139158534392
+    },
+    {
+      "file": "audio/skill_mathemathing.mp3",
+      "duration": 0.3657142857142857,
+      "peak": 0.2929267883300781,
+      "rms": 0.029033378606037927
+    },
+    {
+      "file": "audio/skill_paradox.mp3",
+      "duration": 0.18285714285714286,
+      "peak": 0.02144818753004074,
+      "rms": 0.0032539771349921138
+    },
+    {
+      "file": "audio/ultimate_amat.mp3",
+      "duration": 0.809795918367347,
+      "peak": 0.3330433666706085,
+      "rms": 0.04819107452183394
+    },
+    {
+      "file": "audio/ultimate_bane.mp3",
+      "duration": 0.809795918367347,
+      "peak": 0.3357108533382416,
+      "rms": 0.050513161965575586
+    },
+    {
+      "file": "audio/ultimate_bladedancer.mp3",
+      "duration": 0.809795918367347,
+      "peak": 0.33646827936172485,
+      "rms": 0.05036718952246311
+    },
+    {
+      "file": "audio/ultimate_deadbibi.mp3",
+      "duration": 0.809795918367347,
+      "peak": 0.33534589409828186,
+      "rms": 0.04826450628669747
+    },
+    {
+      "file": "audio/ultimate_dummies.mp3",
+      "duration": 0.809795918367347,
+      "peak": 0.3632270395755768,
+      "rms": 0.04624421018172945
+    },
+    {
+      "file": "audio/ultimate_fakhmolitionator.mp3",
+      "duration": 0.809795918367347,
+      "peak": 0.3331836760044098,
+      "rms": 0.04824447848343768
+    },
+    {
+      "file": "audio/ultimate_fasiamslicer.mp3",
+      "duration": 0.809795918367347,
+      "peak": 0.3364587128162384,
+      "rms": 0.04724809422601615
+    },
+    {
+      "file": "audio/ultimate_fosavoldigold.mp3",
+      "duration": 0.9142857142857143,
+      "peak": 0.4160802364349365,
+      "rms": 0.07240257373417995
+    },
+    {
+      "file": "audio/ultimate_goshiki.mp3",
+      "duration": 0.809795918367347,
+      "peak": 0.3465588688850403,
+      "rms": 0.048367322490924874
+    },
+    {
+      "file": "audio/ultimate_gravity.mp3",
+      "duration": 0.809795918367347,
+      "peak": 0.3209031820297241,
+      "rms": 0.04817643343485832
+    },
+    {
+      "file": "audio/ultimate_mathemathing.mp3",
+      "duration": 0.809795918367347,
+      "peak": 0.34463784098625183,
+      "rms": 0.04837601495532101
+    },
+    {
+      "file": "audio/ultimate_paradox.mp3",
+      "duration": 0.809795918367347,
+      "peak": 0.33271169662475586,
+      "rms": 0.04742863241802921
+    }
+  ],
+  "clocks": {
+    "partyOK": true,
+    "bossOK": true,
+    "elapsed": 184000.0000000311
+  },
+  "errors": [],
+  "outside": [],
+  "note": "Chromium app-local bundle emulation, not APK installation or physical Android device testing."
+}

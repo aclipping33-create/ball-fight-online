@@ -1,0 +1,26 @@
+{
+  "passed": 20,
+  "checks": [
+    "Human Paradox basic is automatic, no action input needed, and deals 16 not 22",
+    "Automatic basic continues on 290ms cooldown without a manual BASIC button",
+    "Skill 1 window lasts 500ms: an attack at 450ms still perfectly parries",
+    "Skill 1 miss is vulnerable after the enlarged window, with original 6-second miss cooldown",
+    "Manual counter remains 88, crit basic reduced to 32 rather than 44",
+    "Ultimate starts Absolute Evasion for exactly 3 seconds, with original 20-second cooldown",
+    "Evasion automatically parries enemy hits without pressing Skill 1",
+    "Ultimate retaliation schedules basic, not immediate 88 damage and micro-stun spam",
+    "Dense projectile burst cannot multiply basic DPS or cancel its queued windup forever",
+    "Unknown-source/environment damage is evaded, without inventing a counter target",
+    "Crowd-control timers and impulse from an attacker are rejected throughout Evasion",
+    "Absolute Evasion also parries Fosa Logic Breaker and counters with basic, not 88",
+    "ULT cannot be recast or overlapped with manual parry; does not create a missed-parry penalty",
+    "After Evasion expires, next hit damages normally and no auto-parry or immunity remains",
+    "Zero Zone was removed: no capture, forced pull, projectile wall or ranged suppression",
+    "Two simultaneously evading Paradoxes cannot recurse counters or produce nonfinite positions",
+    "KO/round cleanup immediately ends Evasion, and next round starts without old immunity",
+    "All five bosses can be automatically parried and basic-countered without freezing their timers",
+    "Amat basic is nerfed to 16 base / 17.92 applied damage; dash, HP, shield and cadence stay native",
+    "Amat Dash Punch damage remains 50.4 after global modifier, not changed by basic nerf"
+  ],
+  "note": "Automated fixtures, not human balance validation."
+}

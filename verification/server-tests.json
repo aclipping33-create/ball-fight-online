@@ -1,0 +1,17 @@
+{
+  "passed": 12,
+  "checks": [
+    "Offline catalog twelve; all twelve native kits allowed online",
+    "Removed heroes have no asset folders, catalog data or playable factory branches",
+    "Economy implementation and UI are deleted rather than hidden",
+    "Every retained hero executes skills/ultimate and 1200 simulation ticks",
+    "Damage counts shield absorption without overkill and excludes invulnerable hits",
+    "All-player sorted damage and normal victory remain: 1v1",
+    "All-player sorted damage and normal victory remain: 2v2",
+    "All-player sorted damage and normal victory remain: boss",
+    "Server rejects selection of deleted hero and does not auto-substitute it",
+    "Protocol 2 clients cannot join the protocol 5 twelve-hero room",
+    "Forged state/damage rejected and simulation continues without creator rendering",
+    "All five bosses remain valid with 1-4 players"
+  ]
+}

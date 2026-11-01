@@ -1,0 +1,48 @@
+name: Build editable Ball Fight APK
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  apk:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - name: Install dependencies and Android SDK
+        run: |
+          npm ci
+          "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" 'platforms;android-35' 'build-tools;35.0.1'
+      - name: Build current bundled game
+        run: |
+          npm test
+          node sync-android.cjs
+      - name: Sign APK with your optional repository secrets
+        env:
+          SIGNING_KEY_BASE64: ${{ secrets.APK_SIGNING_KEY_BASE64 }}
+          APK_STORE_PASSWORD: ${{ secrets.APK_STORE_PASSWORD }}
+        run: |
+          export ANDROID_JAR="$ANDROID_HOME/platforms/android-35/android.jar"
+          export BUILD_TOOLS="$ANDROID_HOME/build-tools/35.0.1"
+          if [ -n "$SIGNING_KEY_BASE64" ]; then
+            test -n "$APK_STORE_PASSWORD" || { echo 'APK_STORE_PASSWORD secret is required with a signing key'; exit 1; }
+            mkdir -p .secure
+            printf '%s' "$SIGNING_KEY_BASE64" | base64 --decode > .secure/release.jks
+            export APK_KEYSTORE="$PWD/.secure/release.jks"
+          else
+            echo '::warning::No signing key supplied. This generates a new local key, cannot update the delivered APK, and changes on every CI run. Read android/README.md.'
+          fi
+          bash android/build-apk.sh
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Ball-Fight-Online12-APK
+          path: android/releases/*.apk
+          retention-days: 7

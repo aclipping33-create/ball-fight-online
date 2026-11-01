@@ -1,16 +1,17 @@
 'use strict';
 const fs=require('node:fs'),path=require('node:path');
 const ROOT=__dirname;
-const valid=(p)=>/^audio\/[a-z0-9_-]+\.mp3$/i.test(p)||/^textures\/(heroes|arena|menu)\/[a-z0-9_-]+\.(png|webp|jpg|jpeg)$/i.test(p);
+const valid=p=>/^audio\/[a-z0-9_-]+\.mp3$/i.test(p)||/^textures\/(heroes|arena|menu)\/[a-z0-9_-]+\.(png|webp|jpg|jpeg)$/i.test(p)||/^textures\/fx\/(basic|skill|ultimate)\/[a-z0-9_-]+\.(png|webp|jpg|jpeg)$/i.test(p)||/^assets\/heroes\/[a-z0-9_-]+\/(config\.json|(ball|basic|skill|ultimate|trail)\.(png|webp|jpg|jpeg))$/i.test(p);
 function manifest(){
- const files=[];
- for(const dir of ['audio','textures/heroes','textures/arena','textures/menu']){
-  const full=path.join(ROOT,dir);if(!fs.existsSync(full)||fs.lstatSync(full).isSymbolicLink())continue;
-  for(const entry of fs.readdirSync(full,{withFileTypes:true})){
-   const rel=dir+'/'+entry.name;if(entry.isFile()&&!entry.isSymbolicLink()&&valid(rel))files.push(rel);
+ const files=[],heroes={},warnings=[];
+ function walk(dir,depth=0){const full=path.join(ROOT,dir);if(!fs.existsSync(full)||fs.lstatSync(full).isSymbolicLink())return;
+  for(const entry of fs.readdirSync(full,{withFileTypes:true})){if(entry.isSymbolicLink())continue;const rel=dir+'/'+entry.name;
+   if(entry.isDirectory()&&depth<2)walk(rel,depth+1);
+   else if(entry.isFile()&&valid(rel)){files.push(rel);if(rel.endsWith('/config.json')){try{const cfg=JSON.parse(fs.readFileSync(path.join(ROOT,rel),'utf8'));if(!cfg||typeof cfg!=='object'||Array.isArray(cfg))throw Error('object required');heroes[rel.split('/')[2]]=cfg;}catch(e){warnings.push(rel+': '+e.message);}}}
   }
  }
- return {version:1,files:files.sort()};
+ for(const dir of ['audio','textures','assets/heroes'])walk(dir);
+ return {version:2,files:files.sort(),heroes,warnings};
 }
 function manifestScript(data=manifest()){return 'window.BALL_FIGHT_ASSETS='+JSON.stringify(data)+';\nif(window.BallFightAssets)window.BallFightAssets.useManifest(window.BALL_FIGHT_ASSETS);\n';}
 function serveAssets(req,res,pathname){
@@ -23,10 +24,10 @@ function serveAssets(req,res,pathname){
  if(!['GET','HEAD'].includes(req.method)){res.writeHead(405);res.end();return true;}
  const file=path.resolve(ROOT,rel);
  try{
-  const real=fs.realpathSync(file),base=path.join(ROOT,rel.startsWith('audio/')?'audio':'textures')+path.sep;
+  const real=fs.realpathSync(file),base=path.join(ROOT,rel.startsWith('audio/')?'audio':rel.startsWith('assets/')?'assets/heroes':'textures')+path.sep;
   if(!real.startsWith(base)||fs.lstatSync(file).isSymbolicLink())throw Error('unsafe path');
   const stat=fs.statSync(real);if(!stat.isFile())throw Error('not file');
-  const mime={'.mp3':'audio/mpeg','.png':'image/png','.webp':'image/webp','.jpg':'image/jpeg','.jpeg':'image/jpeg'}[path.extname(rel).toLowerCase()];
+  const mime={'.json':'application/json; charset=utf-8','.mp3':'audio/mpeg','.png':'image/png','.webp':'image/webp','.jpg':'image/jpeg','.jpeg':'image/jpeg'}[path.extname(rel).toLowerCase()];
   let start=0,end=stat.size-1,status=200;const range=req.headers.range;
   if(range){
    const m=/^bytes=(\d*)-(\d*)$/.exec(range);

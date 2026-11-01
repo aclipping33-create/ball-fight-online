@@ -1,0 +1,8 @@
+// UI only; no damage, parry, resurrection, domain pulses or ability clocks run in browser online.
+const online12HUD=lanUpdateBattleHud;lanUpdateBattleHud=function(){online12HUD();if(!netGame.active)return;const e=lanFighters[lanLocalSlot()];if(!e)return;const skill=document.getElementById('lanSkillLabel'),ult=document.getElementById('lanUltLabel');
+ if(e instanceof FasiamSlicer){skill.textContent=e.isUltMode?'CASTER DIAM':e.manualCd1>0?'DASH '+(e.manualCd1/1000).toFixed(1)+'s':'DASH SIAP';ult.textContent=e.isUltMode?'BATAL ULT':e.lanReady?'SIAP':Math.floor(e.ultCharge||0)+'%';}
+ if(e instanceof FosaVoldigold){skill.textContent=e.manualCd1>0?'HEARTBEAT '+(e.manualCd1/1000).toFixed(1)+'s':'HEARTBEAT SIAP';ult.textContent=e.logicCast?'TEBASAN':e.lanReady?'SIAP':'CD '+Math.max(0,e.ultRemaining/1000).toFixed(1)+'s';}
+ if(e instanceof Paradox){skill.textContent=e.parryWindow>0?'PARRY!':e.manualCd1>0?'PARRY '+(e.manualCd1/1000).toFixed(1)+'s':'PARRY SIAP';ult.textContent=e.evasionTime>0?'EVASION '+(e.evasionTime/1000).toFixed(1)+'s':e.lanReady?'SIAP':'CD '+Math.max(0,e.ultRemaining/1000).toFixed(1)+'s';}
+};
+
+const online12SoundApply=lanApplySnapshot;lanApplySnapshot=function(packet){const before=lanFighters.map(e=>({revive:!!e.reviveUsed,counters:e.counterCount||0}));const result=online12SoundApply(packet);if(netGame.active)for(let i=0;i<lanFighters.length;i++){const e=lanFighters[i],old=before[i];if(!old)continue;if(e instanceof FosaVoldigold&&e.reviveUsed&&!old.revive)playImpact('fosaRevive');if(e instanceof Paradox&&(e.counterCount||0)>old.counters){playImpact('parrySuccess');playImpact('counterSlash');}}return result;};

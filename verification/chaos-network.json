@@ -1,0 +1,47 @@
+{
+  "passed": 7,
+  "checks": [
+    "Actual Node HTTP health exposes v5, Party 1v1/Boss and twelve network heroes",
+    "Two real browser WebSocket peers enter the same authoritative 720×720 Chaos Party match",
+    "Both peers move via server inputs; draw clients never call hero update; revamped fields import correctly",
+    "Forged client HP/state/damage cannot award a win and authoritative HP overwrites local tampering",
+    "Server continues combat and sends guest state while creator rendering is stopped",
+    "Fresh two-player Boss room imports new attack warnings, patterned bullets and two-player damage standings",
+    "All-player total-damage ranking remains descending; no JS exceptions in either real peer"
+  ],
+  "initial": [
+    {
+      "x": 115,
+      "y": 360,
+      "hp": 440,
+      "hero": "other"
+    },
+    {
+      "x": 605,
+      "y": 360,
+      "hp": 400,
+      "hero": "other"
+    }
+  ],
+  "positions": [
+    {
+      "x": 292.8,
+      "y": 360,
+      "hp": 417.6
+    },
+    {
+      "x": 421.16,
+      "y": 360,
+      "hp": 400
+    }
+  ],
+  "boss": {
+    "id": "prismHydra",
+    "phase": 1,
+    "bullets": 6,
+    "rows": 2,
+    "capacity": 4
+  },
+  "errors": [],
+  "note": "Actual local Node HTTP/WebSocket + two Chromium peers. Cloudflare deployment, public internet latency, actual Wi-Fi phones and quotas were not tested."
+}

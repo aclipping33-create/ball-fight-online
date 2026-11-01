@@ -1,0 +1,58 @@
+{
+  "checks": [
+    {
+      "hero": "Goshiki",
+      "ticks": 300,
+      "intentionallyRevamped": true
+    },
+    {
+      "hero": "Dummies",
+      "ticks": 300,
+      "sha256": "516f964fb86b02bca6c0a31dfcc1b38f2df4c8f89b146a6a0318bc9daf403537",
+      "identical": true
+    },
+    {
+      "hero": "BladeDancer",
+      "ticks": 300,
+      "sha256": "3ca5d0cc223d9e2e88e5b834e30f0bde16cf73df8c4f8da30daf8aefeeaff036",
+      "identical": true
+    },
+    {
+      "hero": "Mathemathing",
+      "ticks": 300,
+      "sha256": "ab00803a8173ff0b25c18e069dc80e2a1bbe1497b62284c0829bae3614d7268f",
+      "identical": true
+    },
+    {
+      "hero": "Gravity",
+      "ticks": 300,
+      "intentionallyRevamped": true
+    },
+    {
+      "hero": "Bane",
+      "ticks": 300,
+      "sha256": "b18c6052174b1b8bbb1d721c153b31b39a561106ee711604b586b9ea36379041",
+      "identical": true
+    },
+    {
+      "hero": "Fakhmolitionator",
+      "ticks": 300,
+      "sha256": "3223bef6bb8311c0a8290dfdf1ba5b24fe31f7009a5f2f5d04d78b7aa7aec9b9",
+      "identical": true
+    },
+    {
+      "hero": "Deadbibi",
+      "ticks": 300,
+      "sha256": "fdf957ded0590f8ed0410b5554079cabfcf5fa55a30f1c0e10b39878b009f937",
+      "identical": true
+    },
+    {
+      "hero": "Amat",
+      "ticks": 300,
+      "intentionallyRevamped": true
+    }
+  ],
+  "identicalHeroComparisons": 1800,
+  "intentionallyRevampedHeroComparisons": 900,
+  "normalization": "Protocol 5→3 and new renderer-only companion/logic/anchor/noTimeLimit fields omitted; combat data unchanged"
+}

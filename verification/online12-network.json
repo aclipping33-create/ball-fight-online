@@ -1,0 +1,16 @@
+{
+  "passed": 9,
+  "checks": [
+    "All twelve real hero choices travel from native LAN picker through production WebSocket validation",
+    "Both real peers import/render Fasiam Alpha/Beta/domain and shared authoritative HP; caster prediction is locked",
+    "Network hit events retain layered procedural audio fallback when a custom MP3 is unavailable",
+    "Real BATAL ULT input clears domain, Beta and companion references on both delta-snapshot clients",
+    "Paradox ULT, automatic parry/Flow/counter fields and exact three-second expiry synchronize through real server, not browser combat",
+    "Fosa sword telegraph imports correctly; real Skill input activates Paradox Perfect Parry and server attributes the 88 counter, not sword damage",
+    "Fosa resurrection happens once on server; both peers import 140 HP and revive remains consumed after BO5 round replacement",
+    "Four real Boss co-op peers run Fasiam/Fosa/Paradox/Amat with shared Beta rendering, Evasion and four-player damage standings",
+    "No JavaScript exceptions and no client-side hero simulation in any of four actual WebSocket peers"
+  ],
+  "errors": [],
+  "note": "Production Node handlers and 4 Chromium peers; test-only server fixture access is in-process, never an exposed HTTP/WS debug endpoint. No public cloud deployment, actual phones or real Wi-Fi tested."
+}

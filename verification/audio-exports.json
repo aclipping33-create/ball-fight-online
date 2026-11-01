@@ -1,0 +1,423 @@
+{
+  "clips": 36,
+  "format": "MP3 mono 128 kbps / 44100 Hz",
+  "note": "Baked from existing layered profiles, not recordings or voice. Dummies skill/ultimate are editable placeholder slots, not added abilities.",
+  "files": [
+    {
+      "file": "audio/hit_fosavoldigold.mp3",
+      "hero": "FosaVoldigold",
+      "type": "hit",
+      "profiles": [
+        "hit"
+      ],
+      "peak": 0.17383168637752533,
+      "duration": 0.23879818594104307,
+      "bytes": 4597
+    },
+    {
+      "file": "audio/skill_fosavoldigold.mp3",
+      "hero": "FosaVoldigold",
+      "type": "skill",
+      "profiles": [
+        "fosaHeartbeat"
+      ],
+      "peak": 0.3417099714279175,
+      "duration": 0.3809750566893424,
+      "bytes": 6687
+    },
+    {
+      "file": "audio/ultimate_fosavoldigold.mp3",
+      "hero": "FosaVoldigold",
+      "type": "ultimate",
+      "profiles": [
+        "ultimate",
+        "fosaRevive"
+      ],
+      "peak": 0.4286530911922455,
+      "duration": 0.8653741496598639,
+      "bytes": 14628
+    },
+    {
+      "file": "audio/hit_paradox.mp3",
+      "hero": "Paradox",
+      "type": "hit",
+      "profiles": [
+        "blade"
+      ],
+      "peak": 0.1298225075006485,
+      "duration": 0.2308843537414966,
+      "bytes": 4179
+    },
+    {
+      "file": "audio/skill_paradox.mp3",
+      "hero": "Paradox",
+      "type": "skill",
+      "profiles": [
+        "parryReady"
+      ],
+      "peak": 0.02242370694875717,
+      "duration": 0.15088435374149659,
+      "bytes": 2925
+    },
+    {
+      "file": "audio/ultimate_paradox.mp3",
+      "hero": "Paradox",
+      "type": "ultimate",
+      "profiles": [
+        "ultimate",
+        "parrySuccess"
+      ],
+      "peak": 0.35080453753471375,
+      "duration": 0.7609750566893424,
+      "bytes": 12956
+    },
+    {
+      "file": "audio/hit_fasiamslicer.mp3",
+      "hero": "FasiamSlicer",
+      "type": "hit",
+      "profiles": [
+        "fasiamSlash"
+      ],
+      "peak": 0.09714765101671219,
+      "duration": 0.2509750566893424,
+      "bytes": 4597
+    },
+    {
+      "file": "audio/skill_fasiamslicer.mp3",
+      "hero": "FasiamSlicer",
+      "type": "skill",
+      "profiles": [
+        "dash",
+        "bladeHeavy"
+      ],
+      "peak": 0.33557775616645813,
+      "duration": 0.3107482993197279,
+      "bytes": 5433
+    },
+    {
+      "file": "audio/ultimate_fasiamslicer.mp3",
+      "hero": "FasiamSlicer",
+      "type": "ultimate",
+      "profiles": [
+        "ultimate",
+        "fasiamMerge"
+      ],
+      "peak": 0.353311151266098,
+      "duration": 0.7609977324263039,
+      "bytes": 12956
+    },
+    {
+      "file": "audio/hit_goshiki.mp3",
+      "hero": "Goshiki",
+      "type": "hit",
+      "profiles": [
+        "twang"
+      ],
+      "peak": 0.09514764696359634,
+      "duration": 0.3024943310657596,
+      "bytes": 5433
+    },
+    {
+      "file": "audio/skill_goshiki.mp3",
+      "hero": "Goshiki",
+      "type": "skill",
+      "profiles": [
+        "clash",
+        "twang"
+      ],
+      "peak": 0.18657884001731873,
+      "duration": 0.31759637188208617,
+      "bytes": 5851
+    },
+    {
+      "file": "audio/ultimate_goshiki.mp3",
+      "hero": "Goshiki",
+      "type": "ultimate",
+      "profiles": [
+        "ultimate",
+        "clash"
+      ],
+      "peak": 0.36515918374061584,
+      "duration": 0.7609977324263039,
+      "bytes": 12956
+    },
+    {
+      "file": "audio/hit_dummies.mp3",
+      "hero": "Dummies",
+      "type": "hit",
+      "profiles": [
+        "hit"
+      ],
+      "peak": 0.15570798516273499,
+      "duration": 0.23984126984126983,
+      "bytes": 4597
+    },
+    {
+      "file": "audio/skill_dummies.mp3",
+      "hero": "Dummies",
+      "type": "skill",
+      "profiles": [
+        "clash"
+      ],
+      "peak": 0.16061553359031677,
+      "duration": 0.23072562358276644,
+      "bytes": 4179
+    },
+    {
+      "file": "audio/ultimate_dummies.mp3",
+      "hero": "Dummies",
+      "type": "ultimate",
+      "profiles": [
+        "ultimate"
+      ],
+      "peak": 0.3709179162979126,
+      "duration": 0.7609750566893424,
+      "bytes": 12956
+    },
+    {
+      "file": "audio/hit_bladedancer.mp3",
+      "hero": "BladeDancer",
+      "type": "hit",
+      "profiles": [
+        "blade"
+      ],
+      "peak": 0.12635868787765503,
+      "duration": 0.23038548752834467,
+      "bytes": 4179
+    },
+    {
+      "file": "audio/skill_bladedancer.mp3",
+      "hero": "BladeDancer",
+      "type": "skill",
+      "profiles": [
+        "dash",
+        "bladeHeavy"
+      ],
+      "peak": 0.3426359295845032,
+      "duration": 0.31081632653061225,
+      "bytes": 5433
+    },
+    {
+      "file": "audio/ultimate_bladedancer.mp3",
+      "hero": "BladeDancer",
+      "type": "ultimate",
+      "profiles": [
+        "ultimate",
+        "bladeHeavy"
+      ],
+      "peak": 0.3607042133808136,
+      "duration": 0.7609977324263039,
+      "bytes": 12956
+    },
+    {
+      "file": "audio/hit_mathemathing.mp3",
+      "hero": "Mathemathing",
+      "type": "hit",
+      "profiles": [
+        "twang"
+      ],
+      "peak": 0.09936024993658066,
+      "duration": 0.29829931972789114,
+      "bytes": 5433
+    },
+    {
+      "file": "audio/skill_mathemathing.mp3",
+      "hero": "Mathemathing",
+      "type": "skill",
+      "profiles": [
+        "dash",
+        "twang"
+      ],
+      "peak": 0.2903132140636444,
+      "duration": 0.32086167800453513,
+      "bytes": 5851
+    },
+    {
+      "file": "audio/ultimate_mathemathing.mp3",
+      "hero": "Mathemathing",
+      "type": "ultimate",
+      "profiles": [
+        "ultimate",
+        "clash"
+      ],
+      "peak": 0.3659137487411499,
+      "duration": 0.7608163265306123,
+      "bytes": 12956
+    },
+    {
+      "file": "audio/hit_gravity.mp3",
+      "hero": "Gravity",
+      "type": "hit",
+      "profiles": [
+        "clash"
+      ],
+      "peak": 0.17249207198619843,
+      "duration": 0.23095238095238096,
+      "bytes": 4179
+    },
+    {
+      "file": "audio/skill_gravity.mp3",
+      "hero": "Gravity",
+      "type": "skill",
+      "profiles": [
+        "dash",
+        "clash"
+      ],
+      "peak": 0.28614529967308044,
+      "duration": 0.30458049886621313,
+      "bytes": 5433
+    },
+    {
+      "file": "audio/ultimate_gravity.mp3",
+      "hero": "Gravity",
+      "type": "ultimate",
+      "profiles": [
+        "ultimate",
+        "clash"
+      ],
+      "peak": 0.33794665336608887,
+      "duration": 0.7609523809523809,
+      "bytes": 12956
+    },
+    {
+      "file": "audio/hit_bane.mp3",
+      "hero": "Bane",
+      "type": "hit",
+      "profiles": [
+        "bladeHeavy"
+      ],
+      "peak": 0.19739824533462524,
+      "duration": 0.31065759637188206,
+      "bytes": 5433
+    },
+    {
+      "file": "audio/skill_bane.mp3",
+      "hero": "Bane",
+      "type": "skill",
+      "profiles": [
+        "dash",
+        "blade"
+      ],
+      "peak": 0.29728373885154724,
+      "duration": 0.30160997732426303,
+      "bytes": 5433
+    },
+    {
+      "file": "audio/ultimate_bane.mp3",
+      "hero": "Bane",
+      "type": "ultimate",
+      "profiles": [
+        "ultimate",
+        "bladeHeavy"
+      ],
+      "peak": 0.3526826798915863,
+      "duration": 0.7608390022675737,
+      "bytes": 12956
+    },
+    {
+      "file": "audio/hit_fakhmolitionator.mp3",
+      "hero": "Fakhmolitionator",
+      "type": "hit",
+      "profiles": [
+        "hit"
+      ],
+      "peak": 0.16238056123256683,
+      "duration": 0.24077097505668935,
+      "bytes": 4597
+    },
+    {
+      "file": "audio/skill_fakhmolitionator.mp3",
+      "hero": "Fakhmolitionator",
+      "type": "skill",
+      "profiles": [
+        "clash",
+        "dash"
+      ],
+      "peak": 0.28949886560440063,
+      "duration": 0.30396825396825394,
+      "bytes": 5433
+    },
+    {
+      "file": "audio/ultimate_fakhmolitionator.mp3",
+      "hero": "Fakhmolitionator",
+      "type": "ultimate",
+      "profiles": [
+        "ultimate",
+        "hit"
+      ],
+      "peak": 0.3436143696308136,
+      "duration": 0.7609977324263039,
+      "bytes": 12956
+    },
+    {
+      "file": "audio/hit_deadbibi.mp3",
+      "hero": "Deadbibi",
+      "type": "hit",
+      "profiles": [
+        "clash"
+      ],
+      "peak": 0.15322183072566986,
+      "duration": 0.2308843537414966,
+      "bytes": 4179
+    },
+    {
+      "file": "audio/skill_deadbibi.mp3",
+      "hero": "Deadbibi",
+      "type": "skill",
+      "profiles": [
+        "twang",
+        "clash"
+      ],
+      "peak": 0.23783166706562042,
+      "duration": 0.3192063492063492,
+      "bytes": 5851
+    },
+    {
+      "file": "audio/ultimate_deadbibi.mp3",
+      "hero": "Deadbibi",
+      "type": "ultimate",
+      "profiles": [
+        "ultimate",
+        "clash"
+      ],
+      "peak": 0.3611888885498047,
+      "duration": 0.7609750566893424,
+      "bytes": 12956
+    },
+    {
+      "file": "audio/hit_amat.mp3",
+      "hero": "Amat",
+      "type": "hit",
+      "profiles": [
+        "hit"
+      ],
+      "peak": 0.16630448400974274,
+      "duration": 0.24047619047619048,
+      "bytes": 4597
+    },
+    {
+      "file": "audio/skill_amat.mp3",
+      "hero": "Amat",
+      "type": "skill",
+      "profiles": [
+        "dash",
+        "hit"
+      ],
+      "peak": 0.2897671163082123,
+      "duration": 0.307891156462585,
+      "bytes": 5433
+    },
+    {
+      "file": "audio/ultimate_amat.mp3",
+      "hero": "Amat",
+      "type": "ultimate",
+      "profiles": [
+        "ultimate",
+        "hit"
+      ],
+      "peak": 0.35063689947128296,
+      "duration": 0.7608616780045352,
+      "bytes": 12956
+    }
+  ]
+}

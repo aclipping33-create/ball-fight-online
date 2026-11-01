@@ -1,0 +1,1 @@
+const fs=require('fs'),p=require('path').join(__dirname,'source/game-base.html');let s=fs.readFileSync(p,'utf8');const a=s.indexOf('// BEGIN CHAOS REVAMP'),z='// END CHAOS REVAMP';if(a>=0){const b=s.indexOf(z,a);if(b<0)throw Error('Missing revamp end');s=s.slice(0,a)+s.slice(b+z.length);}fs.writeFileSync(p,s);

@@ -1,11 +1,11 @@
-name = "ball-fight-online"
+name = "ball-fight"
 main = "worker.js"
 compatibility_date = "2025-10-11"
 
 [assets]
 directory = "./public"
 binding = "ASSETS"
-run_worker_first = true
+run_worker_first = ["/room", "/allocate", "/health"]
 
 [[durable_objects.bindings]]
 name = "ROOMS"

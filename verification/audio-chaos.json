@@ -1,0 +1,126 @@
+{
+  "cases": 15,
+  "audio": [
+    {
+      "kind": "hit",
+      "peak": 0.17383168637752533,
+      "rms": 0.011105293459011501,
+      "clipped": 0,
+      "active": 1,
+      "remaining": 0
+    },
+    {
+      "kind": "blade",
+      "peak": 0.12556923925876617,
+      "rms": 0.008166572425424408,
+      "clipped": 0,
+      "active": 1,
+      "remaining": 0
+    },
+    {
+      "kind": "bladeHeavy",
+      "peak": 0.22444956004619598,
+      "rms": 0.017328371625166223,
+      "clipped": 0,
+      "active": 1,
+      "remaining": 0
+    },
+    {
+      "kind": "dash",
+      "peak": 0.24258136749267578,
+      "rms": 0.015651103279061128,
+      "clipped": 0,
+      "active": 1,
+      "remaining": 0
+    },
+    {
+      "kind": "ultimate",
+      "peak": 0.3502780497074127,
+      "rms": 0.04409386475308699,
+      "clipped": 0,
+      "active": 1,
+      "remaining": 0
+    },
+    {
+      "kind": "clash",
+      "peak": 0.15122702717781067,
+      "rms": 0.010429936381917772,
+      "clipped": 0,
+      "active": 1,
+      "remaining": 0
+    },
+    {
+      "kind": "fasiamPulse",
+      "peak": 0.04659499600529671,
+      "rms": 0.0028156052237264177,
+      "clipped": 0,
+      "active": 1,
+      "remaining": 0
+    },
+    {
+      "kind": "fasiamMerge",
+      "peak": 0.11782360821962357,
+      "rms": 0.00823695555654695,
+      "clipped": 0,
+      "active": 1,
+      "remaining": 0
+    },
+    {
+      "kind": "fosaRevive",
+      "peak": 0.37706711888313293,
+      "rms": 0.057482328071158474,
+      "clipped": 0,
+      "active": 1,
+      "remaining": 0
+    },
+    {
+      "kind": "fosaHeartbeat",
+      "peak": 0.33929386734962463,
+      "rms": 0.03448958731800617,
+      "clipped": 0,
+      "active": 1,
+      "remaining": 0
+    },
+    {
+      "kind": "parryReady",
+      "peak": 0.023844879120588303,
+      "rms": 0.0015253350197425367,
+      "clipped": 0,
+      "active": 1,
+      "remaining": 0
+    },
+    {
+      "kind": "parrySuccess",
+      "peak": 0.07734443247318268,
+      "rms": 0.007788506546702497,
+      "clipped": 0,
+      "active": 1,
+      "remaining": 0
+    },
+    {
+      "kind": "counterSlash",
+      "peak": 0.15055431425571442,
+      "rms": 0.009669872175870677,
+      "clipped": 0,
+      "active": 1,
+      "remaining": 0
+    },
+    {
+      "kind": "mute",
+      "peak": 0,
+      "rms": 0,
+      "clipped": 0,
+      "active": 0,
+      "remaining": 0
+    },
+    {
+      "kind": "burst",
+      "peak": 0.7032685279846191,
+      "rms": 0.05525214182475109,
+      "clipped": 0,
+      "active": 12,
+      "remaining": 0
+    }
+  ],
+  "note": "Offline Web Audio waveform synthesis, not physical speaker listening."
+}

@@ -1,18 +1,37 @@
 {
   "name": "ball-fight-portrait",
-  "version": "1.3.0",
+  "version": "2.7.0",
   "private": true,
-  "description": "Ball Fight portrait offline, LAN and Cloudflare Workers relay \u2014 120 heroes",
+  "description": "All 12 native heroes online, no match timers, bundled Android APK and editable MP3/hero textures",
   "scripts": {
     "start": "node server.js",
     "prepare:worker": "node prepare-worker.cjs",
     "deploy": "npm run prepare:worker && wrangler deploy",
-    "assets": "node update-assets.cjs"
+    "assets": "node update-assets.cjs",
+    "build": "node update-assets.cjs && node build-client.cjs && node build-engine.cjs",
+    "test:server": "node --test tests/server.test.mjs",
+    "test:fasiam": "node --test tests/fasiam.test.mjs",
+    "test:parity": "node tests/parity-nine.mjs",
+    "test:party": "node tests/chaos-browser.cjs",
+    "test:chaos": "node --test tests/chaos.test.mjs",
+    "test:network": "node tests/chaos-network.cjs",
+    "build:standalone": "node build-standalone.cjs",
+    "test:audio": "node tests/audio-chaos.cjs",
+    "test:duelists": "node --test tests/duelists.test.mjs",
+    "test:duelists-browser": "node tests/evasion-browser.cjs",
+    "test:evasion": "node --test tests/evasion.test.mjs",
+    "test:evasion-browser": "node tests/evasion-browser.cjs",
+    "test": "node --test tests/server.test.mjs tests/fasiam.test.mjs tests/chaos.test.mjs tests/duelists.test.mjs tests/evasion.test.mjs tests/online12.test.mjs",
+    "test:online12": "node --test tests/online12.test.mjs",
+    "test:online12-network": "node tests/online12-network.cjs",
+    "test:apk-bundle": "node android/test-bundle.cjs"
   },
   "dependencies": {
     "ws": "^8.18.0"
   },
   "devDependencies": {
+    "acorn": "^8.19.0",
+    "playwright": "^1.64.1",
     "wrangler": "^4.0.0"
   },
   "engines": {

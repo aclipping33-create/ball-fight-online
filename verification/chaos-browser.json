@@ -1,0 +1,69 @@
+{
+  "passed": 19,
+  "checks": [
+    "Twelve heroes; Party/Boss/Classic menus; old Arena/Ranked/local-duel choices and network team PvP removed",
+    "All five main menu actions fit three portrait viewports and are at least 48px tall",
+    "Screen-space P1/P2 directions, rotated knob, three pointers, skill release and pause cleanup retained",
+    "Bumper map replaced by seven solid obstacles including moving bars; swept fast movement cannot cross center pillar",
+    "Sky power-up visibly falls before pickup; landing pickup applies healing rather than awarding on spawn",
+    "Laser warning causes no damage; active strip deals a bounded hit after 1.4 seconds",
+    "CPU navigates around thick obstacle corners and reaches combat rather than walking into the center wall forever",
+    "Party first-to-three and clean one-button series rematch retained",
+    "Gravitated manual polarity well pulls, repulses, expires; orbital ultimate renders and starts only when armed",
+    "Goshiki Blue has a visible suction field and Red skill pushes away; neither is an inverted effect",
+    "All five offline bosses warn before execution, transition through three phases and use full-arena camera",
+    "Offline Boss can damage real Fasiam Beta and shared HP, not an untargetable cosmetic clone",
+    "Boss victory and rematch reset phase, bullets, HP and companion correctly",
+    "All twelve heroes survive 18,000 Chaos fixture steps with skills/ults, CPU navigation and rendering",
+    "Twenty-five Boss/channel/exit cycles leave no Beta, active boss, bullet state, RAF or stuck pointer",
+    "Classic 1v1 auto-combat, teams and FFA remain playable, not redirected to the removed Arena",
+    "Actual RAF game runs new Gravitated versus Goshiki on Chaos Foundry",
+    "Layered SFX unlock, play and clean up after real browser interaction",
+    "Standalone uses 99 embedded media, zero HTTP/CDN requests, no missing assets and no browser exceptions"
+  ],
+  "bossList": [
+    {
+      "id": "mineKing",
+      "warning": "BOMB GRID",
+      "active": 1,
+      "p2": 2,
+      "p3": 3,
+      "zoom": 1
+    },
+    {
+      "id": "twinColossus",
+      "warning": "CROSS CUT",
+      "active": 1,
+      "p2": 2,
+      "p3": 3,
+      "zoom": 1
+    },
+    {
+      "id": "stormArchon",
+      "warning": "THUNDER LANES",
+      "active": 1,
+      "p2": 2,
+      "p3": 3,
+      "zoom": 1
+    },
+    {
+      "id": "voidMatriarch",
+      "warning": "VOID WELLS",
+      "active": 1,
+      "p2": 2,
+      "p3": 3,
+      "zoom": 1
+    },
+    {
+      "id": "prismHydra",
+      "warning": "PRISM FAN",
+      "active": 1,
+      "p2": 2,
+      "p3": 3,
+      "zoom": 1
+    }
+  ],
+  "errors": [],
+  "requests": [],
+  "note": "Chromium emulated touch/viewport. Not physical phone FPS/heat/battery tests or human boss balance playtests."
+}

@@ -1,0 +1,30 @@
+{
+  "passed": 24,
+  "checks": [
+    "All twelve heroes available to authoritative native network roster",
+    "Red follows explicit analog direction even while closest opponent is on the other axis",
+    "Aimed Red hits above caster and pushes in the shot direction, Blue still attracts",
+    "Fasiam base movement increased from 290 to 330 without changing HP or domain durations",
+    "ULT recast cancels Fasiam at elapsed 100ms, removes Beta and stops further pulses",
+    "ULT recast cancels Fasiam at elapsed 900ms, removes Beta and stops further pulses",
+    "ULT recast cancels Fasiam at elapsed 3500ms, removes Beta and stops further pulses",
+    "Finger Snap hits only the short forward cone and pushes strongly",
+    "Heartbeat interrupts actual Fasiam split/domain and targetable Beta, then enforces five-second cooldown",
+    "Heartbeat clears Hollow Purple windup without refunding spent ultimate",
+    "Fosa resurrects immediately at exactly 25% and only once across a BO5 series",
+    "Logic Breaker pierces invulnerability and stealth while keeping ordinary hit immune",
+    "Venuzdonoa waits 550ms, cuts a forward line, not every opponent globally, and uses strict 24s cooldown",
+    "Logic destroys intersected Chaos structures persistently until next round, not arena boundaries",
+    "Perfect Parry blocks incoming damage, teleports behind actual attacker, micro-stuns and resets immediately",
+    "Parry fails after 500ms and takes full damage, with six-second miss cooldown",
+    "Parry rejects direct native crowd control and movement setters, not merely HP loss",
+    "Skill 1 animation-cancels a pending Precision Strike before damage; no Dash exists",
+    "Flow stacks cap at three, speed becomes +60%, only the next successful basic is critical",
+    "Perfect Parry wins the explicitly chosen conflict with Fosa Venuzdonoa",
+    "Boss attack can be perfectly parried and counter-damaged without freezing shared boss simulation",
+    "All 144 ordered offline hero matchups run skills/ults/auto-basic and stay finite",
+    "Public room accepts all three newly networked native heroes",
+    "Post-counter guard only suppresses the original attacker, not unrelated attacks or environment"
+  ],
+  "note": "Simulation fixtures, not human balance or physical phone testing."
+}

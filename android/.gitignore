@@ -1,0 +1,5 @@
+signing/
+.work/
+releases/
+assets/www/*
+!assets/www/.gitkeep

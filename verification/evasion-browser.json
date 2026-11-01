@@ -1,0 +1,26 @@
+{
+  "passed": 12,
+  "checks": [
+    "Same twelve offline heroes; Paradox details advertise automatic basic, 0.5-second parry and new ultimate",
+    "Manual BASIC button removed from both P1/P2; movement/skill/ULT still fit three portrait viewports",
+    "Human Party Paradox actually auto-attacks for 16 damage without pressing BASIC",
+    "Skill pointer cancels auto-basic windup, opens enlarged parry, and never releases movement pointer",
+    "Real ULT input runs automatic parry and reduced basic retaliation, not 88-damage counter spam or Zero Zone",
+    "Evasion ends after three seconds; incoming damage works again and HUD has no stuck active state",
+    "Old capture/pull/ranged-silence domain mechanics are genuinely gone",
+    "Actual Amat fist damage is nerfed to 17.92 applied; dash 50.4, shield 440 and HP 1 remain",
+    "All five offline bosses run against new Paradox with Evasion, auto-basic, manual parry and rendering",
+    "Twenty ULT/quit cycles leave no evasion, actions, pointers or active loop",
+    "Classic auto-combat still starts with Paradox and Amat",
+    "99 embedded media, no HTTP/CDN requests, no failed assets or page exceptions"
+  ],
+  "amat": {
+    "damage": 17.91999999999996,
+    "dash": 50.4,
+    "shield": 440,
+    "hp": 1
+  },
+  "errors": [],
+  "requests": [],
+  "note": "Chromium emulation, not physical-phone or human balance testing."
+}

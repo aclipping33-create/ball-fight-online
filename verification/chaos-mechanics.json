@@ -1,0 +1,24 @@
+{
+  "passed": 18,
+  "checks": [
+    "Network exposes Party 1v1 and Boss only, protocol 5 rejects old or team arena creation",
+    "Authoritative Party starts 720 square, seven obstacles, two movers and a real countdown",
+    "Dynamic wall state and sky pickups are simulated on server, not supplied by client",
+    "Swept obstacle stops 400-unit body crossing and bounds stay valid",
+    "Party is first to three, not first KO; server auto-advances rounds and keeps damage standings",
+    "Simultaneous KO and timeout tolerance do not award an arbitrary player",
+    "Seeded 30 versus 60 tick calls preserve Party fixed-step positions",
+    "Gravitated well is manual, finite, switches pull to repulse and expires without stun",
+    "Gravitated ultimate is a four-second local orbit field, no global floor lock",
+    "Goshiki Blue creates suction in radius and persists briefly after its damage hit",
+    "Goshiki Red pushes strongly; Hollow Purple damage/cinematic constants retained",
+    "All five bosses have four distinct original patterns and three HP phases with transition grace",
+    "Boss per-source 150ms hit gate closes per-frame melee exploit but allows distinct teammates",
+    "All boss pattern phases stay finite and bullet budget is bounded with four players",
+    "Idle Dummies and Deadbibi do not auto-win any of the five boss fights",
+    "Bane shrink cancels stale boss telegraphs and keeps boss/gap inside new bounds",
+    "All 144 ordered hero matchups execute combat, skills, ultimates and reflected projectiles safely",
+    "Round changes force a full snapshot instead of retaining stale aura/shield fields in deltas"
+  ],
+  "note": "Automated fixture tests, not human balance playtests or physical hardware benchmarks."
+}

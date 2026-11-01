@@ -1,0 +1,26 @@
+{
+  "passed": 20,
+  "checks": [
+    "Fasiam native kit accepted by authoritative roster and room",
+    "Basic forward arc hits front, not rear/side/teammate, and respects 400ms cooldown",
+    "Basic is blocked by walls and has finite range",
+    "Shadow Dash damages all path/endpoint enemies once, slows them, never hits teammate",
+    "Dash stops before walls using real body radius; rejected edge dash consumes no cooldown",
+    "Dash diagonal/corner sweep and all map edges stay in bounds",
+    "Ultimate has genuine split 360ms, domain 3000ms, merge 260ms with exact fifteen pulses",
+    "Ultimate anchors are immobile and neither skill nor basic can fire during channel",
+    "Domain sector intersection excludes outside; no friendly stun/damage; CC immunity respected",
+    "Beta shares damage/CC with Alpha; two independent same-amount piercing hits are NOT lost",
+    "Shared HP uses existing i-frames to avoid double non-piercing native AoE damage",
+    "Mirror Fasiam: eligible Beta still receives domain damage when Alpha is outside",
+    "Death during any phase clears companion; no frozen or orphan Beta",
+    "Narrow arena rejects split without spending charge; edge split stays inside",
+    "Passive charge reaches ready in 25 seconds and domain does not refill charge",
+    "Real engine input/skills/ult across four-player mirror fight remains finite for 1800 steps",
+    "Domain obeys cover when both anchor sight lines are blocked",
+    "Live Bane shrink clips anchors and remerge restores full-radius safety",
+    "Auto-aim nearest visible enemy shifts split toward target and excludes distant targets",
+    "Slow domain does not erase movement and channel i-frames expire normally"
+  ],
+  "note": "Headless mechanical checks; not a physical Android-device test."
+}

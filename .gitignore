@@ -1,0 +1,14 @@
+node_modules/
+public/
+.wrangler/
+android/signing/
+android/.work/
+android/releases/
+android/assets/www/*
+!android/assets/www/.gitkeep
+*.log
+
+.worker-check/
+verification/*.png
+*.apk
+*.zip

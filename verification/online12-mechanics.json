@@ -1,0 +1,21 @@
+{
+  "passed": 15,
+  "checks": [
+    "Health and server accept all twelve heroes, both LAN/Worker room modes, protocol 5",
+    "Old protocol 4 is explicitly rejected; no mismatched 9-hero client silently enters",
+    "Party round stays playing past sixty seconds with unequal HP; no HP timeout tiebreak",
+    "Room wall-clock cap removed: 25-minute elapsed does not force DRAW or idle",
+    "Classic and Boss snapshots advertise KO/objective only, retain authoritative cooldown clocks",
+    "Classic-authority Fasiam split exports actual Beta/domain/shared-HP state and caster movement lock",
+    "Classic-authority ULT recast cancels Fasiam, sends explicit nulls, restores movement",
+    "Beta is an enemy target in native server nearest-target selection, not a decoration",
+    "Fasiam finite split/domain/remerge durations remain; no endless ULT after timer removal",
+    "Fosa sword telegraph/24-second CD exported and true damage credited once to TOP DAMAGE ledger",
+    "Server sword damage respects Perfect Parry; only Paradox receives counter attribution",
+    "Fosa server resurrection exports true revive flag + 25% shared authority HP, only once per match",
+    "Paradox automatic counter/Flow/critical/evasion and skill clocks are serialized, not client simulated",
+    "All four co-op slots accept new kits; friendly domains cannot hit allied roots/Beta",
+    "Room JSON contains only state, no embedded textures/audio/data-URIs or client-authority fields"
+  ],
+  "note": "In-process authoritative room/engine tests; no cloud deployment or physical phone testing."
+}
